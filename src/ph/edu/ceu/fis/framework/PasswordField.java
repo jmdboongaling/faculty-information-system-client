@@ -41,7 +41,7 @@ public class PasswordField extends JPanel{
 
         
         
-        textField.addFocusListener(new FocusListener() {
+        textField.addFocusListener(new FocusListener(){
 
             @Override
             public void focusGained(FocusEvent fe){

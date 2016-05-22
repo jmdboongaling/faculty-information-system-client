@@ -97,7 +97,7 @@ public class PictureLabel extends JLabel{
         setBorder(new EmptyBorder(20, 0, 20, 0));
     }
     
-    public static BufferedImage makeRoundedCorner(BufferedImage image, int cornerRadius) {
+    public static BufferedImage makeRoundedCorner(BufferedImage image, int cornerRadius){
     int w = image.getWidth();
     int h = image.getHeight();
     BufferedImage output = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);

@@ -76,7 +76,8 @@ public class Flags{
                 
             }
         }catch(ClientHandlerException che){
-            che.printStackTrace();
+            ClientUtils.log(new java.util.Date() + "- Web Server Connection..........[FALSE!]\nError Message: " + che.getMessage());
+            
         }catch(JSONException je){
             je.printStackTrace();
         }

@@ -30,26 +30,26 @@ public class BlurLayerUI extends LayerUI<Component> {
     private BufferedImage mOffscreenImage;
     private final BufferedImageOp mOperation;
 
-    public BlurLayerUI() {
+    public BlurLayerUI(){
         int blurValue = 10;
         int blurCount = blurValue*blurValue;
         float ninth = 1.0f / blurCount;
         float[] blurKernel = new float[blurCount];
-        for(int i=0; i<blurCount; i++) {
+        for(int i=0; i<blurCount; i++){
             blurKernel[i] = ninth;
         }
         mOperation = new ConvolveOp(new Kernel(blurValue, blurValue, blurKernel), ConvolveOp.EDGE_NO_OP, null);
     }
 
     @Override
-    public void paint (Graphics g, JComponent c) {
+    public void paint (Graphics g, JComponent c){
         int w = c.getWidth();
         int h = c.getHeight();
-        if(w == 0 || h == 0) {
+        if(w == 0 || h == 0){
             return;
         }
         // only create the offscreen image if the one we have is the wrong size.
-        if(mOffscreenImage == null ||  mOffscreenImage.getWidth() != w ||  mOffscreenImage.getHeight() != h) {
+        if(mOffscreenImage == null ||  mOffscreenImage.getWidth() != w ||  mOffscreenImage.getHeight() != h){
             mOffscreenImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         }
         Graphics2D ig2 = mOffscreenImage.createGraphics();

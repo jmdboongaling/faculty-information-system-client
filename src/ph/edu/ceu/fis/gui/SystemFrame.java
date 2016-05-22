@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.coobird.thumbnailator.Thumbnails;
+import net.java.dev.designgridlayout.DesignGridLayout;
 import ph.edu.ceu.fis.data.Session;
 import ph.edu.ceu.fis.utils.Constants;
 import org.jdesktop.swingx.*;
@@ -56,7 +57,7 @@ public class SystemFrame extends JFrame{
         add(sideBarMain(), BorderLayout.WEST);
         //add(new JButton("Test"), BorderLayout.EAST);
        
-        setResizable(false);
+        setResizable(true);
         setVisible(true);
 
     }
@@ -74,7 +75,7 @@ public class SystemFrame extends JFrame{
         JPanel mainContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
         mainContainer.setBackground(FrameWorkUtils.getPrimaryColor());
         menuButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/close.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/close_focus.png")));
-        menuButton.addActionListener(new ActionListener() {
+        menuButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
                 if(sideBar.isCollapsed()){
@@ -116,21 +117,103 @@ public class SystemFrame extends JFrame{
     public JPanel sideBarCenter(){
         JPanel mainContainer = new JPanel(new BorderLayout());
         mainContainer.setOpaque(true);
-        mainContainer.setBackground(new Color(204, 204, 204).darker());
+        mainContainer.setBackground(new Color(204, 204, 204).darker().darker().darker());
         
         FormButton infoButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/info.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/info_focus.png"))),
                    lockButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/lock.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/lock_focus.png")));
         
         JPanel profileContainer = new JPanel(new BorderLayout());
         profileContainer.setOpaque(true);
-        profileContainer.setBackground(mainContainer.getBackground().darker().darker().darker());
-        
+        profileContainer.setBackground(mainContainer.getBackground().darker());
+        JPanel namePanel = new JPanel(new GridBagLayout());
+        namePanel.setOpaque(false);
+        namePanel.setBorder(new EmptyBorder(0, 10, 10, 10));
+        GridBagConstraints cons = new GridBagConstraints();
+        cons.fill = GridBagConstraints.HORIZONTAL;
+        cons.weightx = 1;
+        cons.gridx = 0;
+        namePanel.add(new FormLabel("Joshua Myron Deidre Dizon Boongaling", Color.WHITE, 18f), cons);
+        namePanel.add(new FormLabel("Systems Administrator", Color.WHITE, 16f), cons);
+        namePanel.add(new FormLabel("ICT Department", Color.WHITE, 13f), cons);
         profileContainer.add(infoButton, BorderLayout.WEST);
         profileContainer.add(new PictureLabel("test.jpg", 200, 200, true), BorderLayout.CENTER);
         profileContainer.add(lockButton, BorderLayout.EAST);
+        profileContainer.add(namePanel, BorderLayout.SOUTH);
         
+        JPanel menuContainer = new JPanel();
+        menuContainer.setOpaque(false);
+        SubMenu profileMenu = new SubMenu("Profile", 
+                                          new ArrayList<FormButton>(
+                                          Arrays.asList(new FormButton[]{  
+                                          new FormButton("      Basic Information", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30), 
+                                          new FormButton("      Files", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30), 
+                                          new FormButton("      Manage Account", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30), 
+                                          new FormButton("      Print Information Sheet", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30)})));
+        ArrayList<FormButton> profileMenuButtons = profileMenu.getSubMenuButtons();
+        profileMenuButtons.get(0).addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                
+            }
+        });
+        
+        profileMenuButtons.get(1).addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                
+            }
+        });
+        
+        profileMenuButtons.get(2).addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                
+            }
+        });
+        
+        profileMenuButtons.get(3).addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                
+            }
+        });
+        
+        SubMenu serviceRecordMenu = new SubMenu("Service Record", 
+                                                new ArrayList<FormButton>(
+                                                Arrays.asList(new FormButton[]{  
+                                                new FormButton("      Load", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30), 
+                                                new FormButton("      Browse Courses", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30), 
+                                                new FormButton("      Print Service Record", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30)})));
+        
+        ArrayList<FormButton> serviceRecordMenuButtons = serviceRecordMenu.getSubMenuButtons();
+        serviceRecordMenuButtons.get(0).addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                
+            }
+        });
+        
+        serviceRecordMenuButtons.get(1).addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                
+            }
+        });
+        
+        serviceRecordMenuButtons.get(2).addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                
+            }
+        });
+        
+        
+        DesignGridLayout menuContainerLayout = new DesignGridLayout(menuContainer);
+        menuContainerLayout.margins(0);
+        menuContainerLayout.row().grid().add(profileMenu);
+        menuContainerLayout.row().grid().add(serviceRecordMenu);
         mainContainer.add(profileContainer, BorderLayout.NORTH);
-        mainContainer.add(new SubMenu("Profile", new ArrayList<FormButton>(Arrays.asList(new FormButton[]{new FormButton("Basic Information", Color.WHITE, new Color(255, 128, 128), 20f), new FormButton("Basic Information", Color.WHITE, new Color(255, 128, 128), 20f), new FormButton("Basic Information", Color.WHITE, new Color(255, 128, 128), 20f)}))), BorderLayout.CENTER);
+        mainContainer.add(menuContainer, BorderLayout.CENTER);
         return mainContainer;
     }
     

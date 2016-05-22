@@ -38,4 +38,9 @@ public class FormLabel extends JLabel{
         setBorder(new EmptyBorder(0, sideSpacing, 0, sideSpacing));
     }
     
+    public FormLabel(ImageIcon labelIcon, int sideSpacing){
+        super(labelIcon);
+        setBorder(new EmptyBorder(0, sideSpacing, 0, sideSpacing));
+    }
+    
 }

@@ -54,11 +54,9 @@ public class LoginForm extends JFrame{
         mainContainer.add(windowContainer(), "Main");
         mainContainer.add(preLoader(), "Load");
         setContentPane(mainContainer);
+        setResizable(false);
         pack();
         setLocationRelativeTo(null);
-        setResizable(false);
-        
-        
         setVisible(true);
         ClientUtils.log(new java.util.Date() + "- Login Window Start...............[OK!]");
         
@@ -89,9 +87,9 @@ public class LoginForm extends JFrame{
         registerButton = new FormButton("Register", Color.WHITE, 16f);
         forgotButton = new FormButton("Forgot Password?", Color.WHITE, 16f);
         
-        loginButton.addActionListener(new ActionListener() {
+        loginButton.addActionListener(new ActionListener(){
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e){
                 panelSwitcher.show(mainContainer, "Load");
                 initSystem(idField.getText().trim(), passwordField.getText()).start();
                
@@ -99,9 +97,9 @@ public class LoginForm extends JFrame{
                 
             }
         });
-        registerButton.addActionListener(new ActionListener() {
+        registerButton.addActionListener(new ActionListener(){
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e){
                
               
                
@@ -145,7 +143,7 @@ public class LoginForm extends JFrame{
         settingsButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/settings_icon.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/settings_icon_focus.png")), Color.WHITE);
         
         wsButton.setToolTipText("Attempting Connection Web Server: " + Constants.getServerAddress() + "At Port " + Constants.getServerPort());
-        wsButton.addActionListener(new ActionListener() {
+        wsButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
                 panelSwitcher.show(mainContainer, "Load");
@@ -155,7 +153,7 @@ public class LoginForm extends JFrame{
         });
         
         ftpButton.setToolTipText("Attempting Connection FTP Server: " + Constants.getFTPServerAddress() + "At Port " + Constants.getFTPServerPort());
-        ftpButton.addActionListener(new ActionListener() {
+        ftpButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
                 panelSwitcher.show(mainContainer, "Load");
@@ -182,7 +180,7 @@ public class LoginForm extends JFrame{
     }
     
     private Thread connectToWS(){
-        Thread connectToWS = new Thread(new Runnable() {
+        Thread connectToWS = new Thread(new Runnable(){
             @Override
             public void run(){
                 try{TimeUnit.SECONDS.sleep(2);}catch(InterruptedException ie){ie.printStackTrace();}
@@ -206,7 +204,7 @@ public class LoginForm extends JFrame{
     }
     
     private Thread connectToFTP(){
-        Thread connectToFTP = new Thread(new Runnable() {
+        Thread connectToFTP = new Thread(new Runnable(){
             @Override
             public void run(){
                 try{TimeUnit.SECONDS.sleep(2);}catch(InterruptedException ie){ie.printStackTrace();}
@@ -229,7 +227,7 @@ public class LoginForm extends JFrame{
     }
     private Thread initSystem(String userID, String userPassword){
         
-        Thread startSystem = new Thread(new Runnable() {
+        Thread startSystem = new Thread(new Runnable(){
             @Override
             public void run(){
                 

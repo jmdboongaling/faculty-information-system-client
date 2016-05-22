@@ -38,7 +38,7 @@ public class UsernameField extends JPanel{
         textField.setFont(FrameWorkUtils.getSystemFont().deriveFont(16f));
         textField.setBorder(null);
         
-        textField.addFocusListener(new FocusListener() {
+        textField.addFocusListener(new FocusListener(){
 
             @Override
             public void focusGained(FocusEvent fe){
