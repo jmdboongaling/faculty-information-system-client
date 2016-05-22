@@ -12,39 +12,23 @@
  ** 
  ** 
  **/
-package ph.edu.ceu.fis.utils;
+package ph.edu.ceu.fis.utils; 
 
+public class ClientUtils{
+    
+    public static void log(String message){
+        System.out.println(message);
+    }
+    public static void log(Object message){
+        System.out.println(message);
+    }
+    
+    public static String parseBool(boolean message){
+        if(message){
+            return "[OK!]";
+        }else{
+            return "[FAILED!]";
+        }
+    }
 
-
-public class Constants{
-    
-    
-  
-    
-    
-    
-    
-    
-    
-    public static String getAppTitle(){
-        
-        return "Centro Escolar University - Faculty Information System";
-    }
-    
-    public static String getServerAddress(){
-        return "127.0.0.1";
-    }
-    
-    public static String getServerPort(){
-        return "8084";
-    }
-    
-    public static String getFTPServerAddress(){
-        return "86.158.47.56";
-    }
-    
-    public static String getFTPServerPort(){
-        return "4321";
-    }
-    
 }

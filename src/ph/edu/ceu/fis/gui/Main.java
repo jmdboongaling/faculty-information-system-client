@@ -14,32 +14,33 @@
  **/
 package ph.edu.ceu.fis.gui;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.*;
+import java.awt.Color;
+import ph.edu.ceu.fis.utils.ClientUtils;
 import javax.swing.SwingUtilities;
-import org.codehaus.jettison.json.JSONObject;
-import org.mindrot.jbcrypt.BCrypt;
+import javax.swing.UIManager;
+import ph.edu.ceu.fis.data.Session;
 
 public class Main{
     
     public static LoginForm loginForm;
     public static void main(String[]args){
         
-        SwingUtilities.invokeLater(new Runnable() {
+        ClientUtils.log(new java.util.Date() + "- Application Started...............[OK!]");
+        /*SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run(){
+                UIManager.put("ToolTip.background", java.awt.Color.WHITE);
+                UIManager.put("ToolTip.font", ph.edu.ceu.fis.framework.FrameWorkUtils.getSystemFont().deriveFont(14f));
                 loginForm = new LoginForm();
             }
-        });
-        //System.out.println(encryptPassword("jWBExBkVYar7QJnbjaj5rxyd", "fis_client"));
+        });*/
+        UIManager.put("Separator.background", Color.BLACK);
+        UIManager.put("Separator.foreground", Color.BLACK);
+        new SystemFrame(new Session("13-11448"));
+        
+        //ClientUtils.log(encryptPassword("jWBExBkVYar7QJnbjaj5rxyd", "fis_client"));
         //jWBExBkVYar7QJnbjaj5rxyd
-        //System.out.println(org.mindrot.jbcrypt.BCrypt.hashpw("123", BCrypt.gensalt(12)));
+        //ClientUtils.log(org.mindrot.jbcrypt.BCrypt.hashpw("123", BCrypt.gensalt(12)));
      
            
        

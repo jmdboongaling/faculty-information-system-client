@@ -14,9 +14,10 @@
  **/
 package ph.edu.ceu.fis.framework;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.io.InputStream;
-import ph.edu.ceu.fis.utils.Constants;
+import ph.edu.ceu.fis.utils.*;
 
 public class FrameWorkUtils{
     
@@ -32,13 +33,19 @@ public class FrameWorkUtils{
              */
             InputStream is = Constants.class.getResourceAsStream("/ph/edu/ceu/fis/res/fonts/system_font.ttf");
             systemFont = Font.createFont(Font.TRUETYPE_FONT, is);
-            System.out.println("Successfully loaded system font...");
+            ClientUtils.log(new java.util.Date() + "- Loading System Font(Quicksand)...............[OK!]");
         }catch(Exception e){
             e.printStackTrace();
-            System.out.println("Failed to load system font...\nNow using Verdana as system font.");
+            ClientUtils.log(new java.util.Date() + "- Loading System Font(Quicksand)...............[FAILED!]");
             systemFont = new Font("Verdana", Font.PLAIN, 12);
+            ClientUtils.log(new java.util.Date() + "- Loading System Font(Verdana)...............[OK!]");
+
         }
         return systemFont;
+    }
+    
+    public static Color getPrimaryColor(){
+        return new Color(74, 120, 156);
     }
     
 }
