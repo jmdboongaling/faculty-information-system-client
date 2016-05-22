@@ -37,8 +37,12 @@ import ph.edu.ceu.fis.framework.SubMenu;
 
 public class SystemFrame extends JFrame{
     Session systemSession;
-    private JXCollapsiblePane sideBar;
+    private JXCollapsiblePane sideBar,
+                              logoutPane;
     private FormButton menuButton;
+    
+    private CardLayout pageSwitcher = new CardLayout();
+    private JPanel pagePanel = new JPanel(pageSwitcher);
     public SystemFrame(Session systemSession){
         this.systemSession = systemSession;
         initComponents();
@@ -47,17 +51,13 @@ public class SystemFrame extends JFrame{
     
     private void initComponents(){
         setTitle(Constants.getAppTitle());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(super.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        getContentPane().setBackground(Color.WHITE);
-        setLayout(new BorderLayout());
-        
-        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        getContentPane().setBackground(new Color(204, 204, 204));
+        setLayout(new BorderLayout()); 
         add(centerPanel(), BorderLayout.CENTER);
         add(sideBarMain(), BorderLayout.WEST);
-        //add(new JButton("Test"), BorderLayout.EAST);
-       
-        setResizable(true);
+        setResizable(false);
+        setExtendedState(super.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         setVisible(true);
 
     }
@@ -65,16 +65,18 @@ public class SystemFrame extends JFrame{
     public JPanel centerPanel(){
         JPanel mainContainer = new JPanel(new BorderLayout());
         mainContainer.setOpaque(true);
-        mainContainer.setBackground(Color.WHITE);
+        mainContainer.setBackground(new Color(240, 240, 240));
         mainContainer.add(topBar(), BorderLayout.NORTH);
-        mainContainer.add(new JLabel("Test"), BorderLayout.CENTER);
+        mainContainer.add(new Dashboard(), BorderLayout.CENTER);
         
         return mainContainer;
     }
     public JPanel topBar(){
-        JPanel mainContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel mainContainer = new JPanel(new BorderLayout());
         mainContainer.setBackground(FrameWorkUtils.getPrimaryColor());
+        
         menuButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/close.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/close_focus.png")));
+        menuButton.setHorizontalAlignment(SwingConstants.LEFT);
         menuButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -86,12 +88,49 @@ public class SystemFrame extends JFrame{
                 new JButton(sideBar.getActionMap().get(JXCollapsiblePane.TOGGLE_ACTION)).doClick();
             }
         });
-        mainContainer.add(menuButton);
+        
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        leftPanel.setOpaque(false);
+        leftPanel.add(menuButton);
+        
+        FormButton yesButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/yes.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/yes_focus.png"))),
+                   noButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/no.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/no_focus.png"))),
+                   bulletinButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/bulletin.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/bulletin_focus.png"))),
+                   logoutButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/logout.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/logout_focus.png")));
+        
+        logoutButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                new JButton(logoutPane.getActionMap().get(JXCollapsiblePane.TOGGLE_ACTION)).doClick();
+            }
+        });
+        JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        logoutPanel.setOpaque(true);
+        logoutPanel.setBackground(FrameWorkUtils.getPrimaryColor());
+        logoutPanel.setBorder(new MatteBorder(0, 5, 0, 0, new Color(244, 186, 112)));
+        logoutPanel.add(new FormLabel("Logout?", Color.WHITE, 15f, 0, 10));
+        logoutPanel.add(yesButton);
+        logoutPanel.add(noButton);
+        
+        logoutPane = new JXCollapsiblePane(JXCollapsiblePane.Direction.RIGHT);
+        logoutPane.setCollapsed(true);
+        logoutPane.add(logoutPanel);
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        rightPanel.setOpaque(true);
+        rightPanel.setBackground(FrameWorkUtils.getPrimaryColor());
+        rightPanel.add(bulletinButton);
+        rightPanel.add(logoutButton);
+        rightPanel.add(logoutPane);
+        
+        mainContainer.add(leftPanel, BorderLayout.WEST);
+        mainContainer.add(rightPanel, BorderLayout.EAST);
         //mainContainer.add(new JLabel(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/logo.png"))));
         //mainContainer.add(new FormLabel("Faculty Information System", Color.WHITE, 20f));
        
         return mainContainer;
     }
+    
+
     
     public JXCollapsiblePane sideBarMain(){
         sideBar = new JXCollapsiblePane(JXCollapsiblePane.Direction.RIGHT);
@@ -128,13 +167,13 @@ public class SystemFrame extends JFrame{
         JPanel namePanel = new JPanel(new GridBagLayout());
         namePanel.setOpaque(false);
         namePanel.setBorder(new EmptyBorder(0, 10, 10, 10));
-        GridBagConstraints cons = new GridBagConstraints();
-        cons.fill = GridBagConstraints.HORIZONTAL;
-        cons.weightx = 1;
-        cons.gridx = 0;
-        namePanel.add(new FormLabel("Joshua Myron Deidre Dizon Boongaling", Color.WHITE, 18f), cons);
-        namePanel.add(new FormLabel("Systems Administrator", Color.WHITE, 16f), cons);
-        namePanel.add(new FormLabel("ICT Department", Color.WHITE, 13f), cons);
+        GridBagConstraints gridbagConstraints = new GridBagConstraints();
+        gridbagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridbagConstraints.weightx = 1;
+        gridbagConstraints.gridx = 0;
+        namePanel.add(new FormLabel("Joshua Myron Deidre Dizon Boongaling", Color.WHITE, 18f), gridbagConstraints);
+        namePanel.add(new FormLabel("Systems Administrator", Color.WHITE, 16f), gridbagConstraints);
+        namePanel.add(new FormLabel("ICT Department", Color.WHITE, 13f), gridbagConstraints);
         profileContainer.add(infoButton, BorderLayout.WEST);
         profileContainer.add(new PictureLabel("test.jpg", 200, 200, true), BorderLayout.CENTER);
         profileContainer.add(lockButton, BorderLayout.EAST);
@@ -145,10 +184,10 @@ public class SystemFrame extends JFrame{
         SubMenu profileMenu = new SubMenu("Profile", 
                                           new ArrayList<FormButton>(
                                           Arrays.asList(new FormButton[]{  
-                                          new FormButton("      Basic Information", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30), 
-                                          new FormButton("      Files", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30), 
-                                          new FormButton("      Manage Account", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30), 
-                                          new FormButton("      Print Information Sheet", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30)})));
+                                          new FormButton("      Basic Information", new Color(244, 186, 112), new Color(255, 128, 128), 14f, 30), 
+                                          new FormButton("      Files", new Color(244, 186, 112), new Color(255, 128, 128), 14f, 30), 
+                                          new FormButton("      Manage Account", new Color(244, 186, 112), new Color(255, 128, 128), 14f, 30), 
+                                          new FormButton("      Print Information Sheet", new Color(244, 186, 112), new Color(255, 128, 128), 14f, 30)})));
         ArrayList<FormButton> profileMenuButtons = profileMenu.getSubMenuButtons();
         profileMenuButtons.get(0).addActionListener(new ActionListener(){
             @Override
@@ -181,9 +220,9 @@ public class SystemFrame extends JFrame{
         SubMenu serviceRecordMenu = new SubMenu("Service Record", 
                                                 new ArrayList<FormButton>(
                                                 Arrays.asList(new FormButton[]{  
-                                                new FormButton("      Load", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30), 
-                                                new FormButton("      Browse Courses", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30), 
-                                                new FormButton("      Print Service Record", new Color(244, 186, 112), new Color(255, 128, 128), 16f, 30)})));
+                                                new FormButton("      Load", new Color(244, 186, 112), new Color(255, 128, 128), 14f, 30), 
+                                                new FormButton("      Browse Courses", new Color(244, 186, 112), new Color(255, 128, 128), 14f, 30), 
+                                                new FormButton("      Print Service Record", new Color(244, 186, 112), new Color(255, 128, 128), 14f, 30)})));
         
         ArrayList<FormButton> serviceRecordMenuButtons = serviceRecordMenu.getSubMenuButtons();
         serviceRecordMenuButtons.get(0).addActionListener(new ActionListener(){

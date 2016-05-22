@@ -26,17 +26,17 @@ public class Main{
     public static void main(String[]args){
         
         ClientUtils.log(new java.util.Date() + "- Application Started...............[OK!]");
-        SwingUtilities.invokeLater(new Runnable(){
+        /*SwingUtilities.invokeLater(new Runnable(){
             @Override
             public void run(){
                 UIManager.put("ToolTip.background", java.awt.Color.WHITE);
                 UIManager.put("ToolTip.font", ph.edu.ceu.fis.framework.FrameWorkUtils.getSystemFont().deriveFont(14f));
                 loginForm = new LoginForm();
             }
-        });
+        });*/
         //UIManager.put("Separator.background", Color.BLACK);
         //UIManager.put("Separator.foreground", Color.BLACK);
-        //new SystemFrame(new Session("13-11448"));
+        new SystemFrame(new Session("13-11448"));
         
         //ClientUtils.log(encryptPassword("jWBExBkVYar7QJnbjaj5rxyd", "fis_client"));
         //jWBExBkVYar7QJnbjaj5rxyd
