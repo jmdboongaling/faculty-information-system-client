@@ -29,7 +29,7 @@ public class Flags{
 
     private boolean wsIsConnected = false,
                     dbIsConnected = false,
-                    ftpIsConnected = false,
+                    ftpIsConnected = true,
                     serverStatus;
     
     
@@ -42,7 +42,9 @@ public class Flags{
         testWs();
         testFTP();
     }
-    
+    public boolean serverIsAvailable(){
+        return serverStatus;
+    }
     public boolean wsIsConnected(){
         return wsIsConnected;
     }
