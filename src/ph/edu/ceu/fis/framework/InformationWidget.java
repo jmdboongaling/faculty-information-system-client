@@ -24,15 +24,21 @@ import java.util.Date;
 public class InformationWidget extends JPanel{
     private FormLabel titleLabel,
                       valueLabel;
-    public InformationWidget(String widgetTitle, ImageIcon widgetIcon, String widgetValue){
-        super(new BorderLayout());
+    
+    private Color foregroundColor;
+    public InformationWidget(String widgetTitle, ImageIcon widgetIcon, String widgetValue, Color backgroundColor, Color foregroundColor){
+        super(new GridLayout(1, 1));
         setOpaque(true);
-        setBackground(Color.WHITE);
-        
-        
-        add(widgetIcon(widgetIcon), BorderLayout.WEST);
-        add(informationPanel(widgetTitle, widgetValue), BorderLayout.CENTER);
-        setBorder(new EmptyBorder(20, 20, 20, 20));
+        setBackground(backgroundColor);
+        this.foregroundColor = foregroundColor;
+        JPanel mainContainer = new JPanel(new BorderLayout(5, 5));
+        mainContainer.setOpaque(false);
+        mainContainer.add(widgetIcon(widgetIcon), BorderLayout.WEST);
+        mainContainer.add(informationPanel(widgetTitle, widgetValue), BorderLayout.CENTER);
+        mainContainer.setBorder(new EmptyBorder(30, 10, 30, 10));
+        add(mainContainer);
+        //setBorder(new CustomShadowBorder());
+                
     }
     
     
@@ -45,15 +51,15 @@ public class InformationWidget extends JPanel{
         gridbagConstraints.weightx = 1;
         gridbagConstraints.gridx = 0;
         
-        titleLabel = new FormLabel(widgetTitle, Color.BLACK, 20f, SwingConstants.LEFT, 20);
-        titleLabel.setFont(FrameWorkUtils.getSystemFont().deriveFont(FrameWorkUtils.getSystemFont().getStyle() | Font.BOLD).deriveFont(40f));
-        valueLabel = new FormLabel(widgetValue, Color.BLACK, 20f, SwingConstants.CENTER, 20);
+        titleLabel = new FormLabel(widgetTitle, foregroundColor, 20f, SwingConstants.LEFT, 20);
+        titleLabel.setFont(FrameWorkUtils.getSystemFont().deriveFont(FrameWorkUtils.getSystemFont().getStyle() | Font.BOLD).deriveFont(20f));
+        valueLabel = new FormLabel(widgetValue, foregroundColor, 16f, SwingConstants.LEFT, 20);
         informationPanel.add(titleLabel, gridbagConstraints);
         informationPanel.add(valueLabel, gridbagConstraints);
         
         return informationPanel;
     }
-    public JLabel widgetIcon(ImageIcon widgetIcon){
+    private JLabel widgetIcon(ImageIcon widgetIcon){
         JLabel widgetLabel = new JLabel(widgetIcon);
         widgetLabel.setBorder(new EmptyBorder(20, 20, 20, 20));
         

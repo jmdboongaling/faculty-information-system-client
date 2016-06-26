@@ -76,4 +76,8 @@ public class PasswordField extends JPanel{
     public String getText(){
         return textField.getText();
     }
+    
+    public JTextField getTextField(){
+        return textField;
+    }
 }

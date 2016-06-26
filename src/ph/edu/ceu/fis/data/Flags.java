@@ -14,6 +14,7 @@
  **/
 package ph.edu.ceu.fis.data; 
 
+import com.jcraft.jsch.*;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
@@ -25,24 +26,23 @@ import ph.edu.ceu.fis.utils.*;
 
 
 public class Flags{
-    
+
     private boolean wsIsConnected = false,
                     dbIsConnected = false,
-                    ftpIsConnected = true,
+                    ftpIsConnected = false,
                     serverStatus;
     
     
     
     public Flags(){
         initFlags();
-    }
+}
     
     private void initFlags(){
         testWs();
+        testFTP();
     }
-    public boolean serverIsAvailable(){
-        return serverStatus;
-    }
+    
     public boolean wsIsConnected(){
         return wsIsConnected;
     }
@@ -54,7 +54,7 @@ public class Flags{
     private void testWs(){
         try{
             Client wsClient =  Client.create();
-            WebResource webResource = wsClient.resource("http://" + Constants.getServerAddress() + ":" + Constants.getServerPort() + "/CEU_FIS_WS/connection/connection-test");
+            WebResource webResource = wsClient.resource("http://" + DataUtils.getWebServerHost()[0] + ":" + DataUtils.getWebServerHost()[1] + "/CEU_FIS_WS/connection/connection-test");
             ClientResponse wsResponse = webResource.accept("application/json").post(ClientResponse.class);
             if(wsResponse.getStatus()!=200){
                 ClientUtils.log(new java.util.Date() + "- Server Status..............." + ClientUtils.parseBool(wsIsConnected && dbIsConnected));
@@ -84,7 +84,39 @@ public class Flags{
     }
     
     private void testFTP(){
-        ftpIsConnected = true;
+        ftpIsConnected = false;
+        try{
+            JSch jsch = new JSch();
+            com.jcraft.jsch.Session session = jsch.getSession(DataUtils.getFTPServerHost()[2], DataUtils.getFTPServerHost()[0], Integer.parseInt(DataUtils.getFTPServerHost()[1]));
+            session.setPassword(DataUtils.getFTPServerHost()[3]);
+            session.setConfig("StrictHostKeyChecking", "no");
+            System.out.println("Establishing Connection...");
+            session.connect();
+            System.out.println("Connection established.");
+            System.out.println("Crating SFTP Channel.");
+            Channel channel = session.openChannel("sftp");
+            channel.connect();
+            ChannelSftp sftpChannel = (ChannelSftp)channel; //(ChannelSftp) session.openChannel("sftp");
+
+            System.out.println("SFTP Channel created.");
+            ftpIsConnected = true;
+            sftpChannel.disconnect();
+            channel.disconnect();
+            session.disconnect();
+            jsch.removeAllIdentity();
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    
+        
+
+
+    
+        
+         
+            
+                    
     }
     
     public void retryConnectToWS(){

@@ -19,6 +19,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.TimeUnit;
+import ph.edu.ceu.fis.data.DataUtils;
 import ph.edu.ceu.fis.data.Flags;
 import ph.edu.ceu.fis.data.Session;
 import ph.edu.ceu.fis.framework.*;
@@ -27,6 +28,10 @@ import ph.edu.ceu.fis.utils.*;
 
 public class LoginForm extends JFrame{
     private Flags systemStartupFlags = new Flags();
+    private UsernameField idField = new UsernameField("Username");
+    
+    private PasswordField passwordField = new PasswordField("Password");
+    
     private FormButton loginButton,
                        registerButton,
                        forgotButton,
@@ -37,7 +42,7 @@ public class LoginForm extends JFrame{
     private CardLayout panelSwitcher = new CardLayout();
     private JPanel mainContainer = new JPanel(panelSwitcher);
     public LoginForm(){
-       super(Constants.getAppTitle());
+       super(DataUtils.getAppTitle());
        initComponents();
        
     }
@@ -49,6 +54,7 @@ public class LoginForm extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.WHITE);
         setLayout(new GridLayout(1, 1, 0, 0));
+        setIconImage(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/icon.png")).getImage());
         mainContainer.setOpaque(true);
         mainContainer.setBackground(Color.WHITE);
         mainContainer.add(windowContainer(), "Main");
@@ -80,8 +86,12 @@ public class LoginForm extends JFrame{
         formContainer.setLayout(new GridLayout(1, 1));
         formContainer.setBorder(new EmptyBorder(50, 50, 50, 50));
         
-        UsernameField idField = new UsernameField("Username");
-        PasswordField passwordField = new PasswordField("Password");
+        passwordField.getTextField().addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                doLogin();
+            }
+        });
         
         loginButton = new FormButton("Login", Color.WHITE, 16f);
         registerButton = new FormButton("Register", Color.WHITE, 16f);
@@ -89,21 +99,14 @@ public class LoginForm extends JFrame{
         
         loginButton.addActionListener(new ActionListener(){
             @Override
-            public void actionPerformed(ActionEvent e){
-                panelSwitcher.show(mainContainer, "Load");
-                initSystem(idField.getText().trim(), passwordField.getText()).start();
-               
-                
-                
+            public void actionPerformed(ActionEvent e){  
+                doLogin();
             }
         });
         registerButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-               
-              
-               
-               
+               //doLogin()
             }
         });
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 5));
@@ -142,7 +145,7 @@ public class LoginForm extends JFrame{
         }
         settingsButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/settings_icon.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/settings_icon_focus.png")), Color.WHITE);
         
-        wsButton.setToolTipText("Attempting Connection Web Server: " + Constants.getServerAddress() + "At Port " + Constants.getServerPort());
+        wsButton.setToolTipText("Attempting Connection Web Server: " + DataUtils.getWebServerHost()[0] + "At Port " + DataUtils.getWebServerHost()[1]);
         wsButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -152,7 +155,7 @@ public class LoginForm extends JFrame{
             }
         });
         
-        ftpButton.setToolTipText("Attempting Connection FTP Server: " + Constants.getFTPServerAddress() + "At Port " + Constants.getFTPServerPort());
+        ftpButton.setToolTipText("Attempting Connection FTP Server: " + DataUtils.getFTPServerHost()[0] + "At Port " + DataUtils.getFTPServerHost()[1]);
         ftpButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -179,6 +182,10 @@ public class LoginForm extends JFrame{
         return container;
     }
     
+    private void doLogin(){
+        panelSwitcher.show(mainContainer, "Load");
+        initSystem(idField.getText().trim(), passwordField.getText()).start();
+    }
     private Thread connectToWS(){
         Thread connectToWS = new Thread(new Runnable(){
             @Override
@@ -230,30 +237,41 @@ public class LoginForm extends JFrame{
         Thread startSystem = new Thread(new Runnable(){
             @Override
             public void run(){
-                
+                Session systemSession = new Session(userID);
                 try{
                     indicatorLabel.setText("Logging In");
                     ClientUtils.log(new java.util.Date()+ "- Attempting Login For User " + userID + "...............[PENDING!]");
-                    TimeUnit.SECONDS.sleep(2);
-                    if(Session.loginAuthentication(userID, userPassword)){
-                        Session systemSession = new Session(userID);
-                        indicatorLabel.setText("Login Successful");
-                        TimeUnit.SECONDS.sleep(2);
-                        indicatorLabel.setText("Fetching Profile Information");
-                        systemSession.invokeWsProfileInformation();
-                        TimeUnit.SECONDS.sleep(2);
-                        indicatorLabel.setText("Loading Profile");
-                        TimeUnit.SECONDS.sleep(2);
-                        indicatorLabel.setText("Loading User Preferences");
-                        TimeUnit.SECONDS.sleep(4);
-                        panelSwitcher.show(mainContainer, "Main");
-                        new SystemFrame(systemSession);
-                        dispose();
+                    TimeUnit.SECONDS.sleep(1);
+                    if(systemStartupFlags.serverIsAvailable()){
+                        if(systemSession.loginAuthentication(userID, userPassword)){  
+                            indicatorLabel.setText("Login Successful");
+                            TimeUnit.SECONDS.sleep(1);
+                            indicatorLabel.setText("Fetching Profile Information");
+                            //systemSession.invokeWsProfileInformation();
+                            TimeUnit.SECONDS.sleep(1);
+                            indicatorLabel.setText("Loading Profile");
+                            TimeUnit.SECONDS.sleep(1);
+                            indicatorLabel.setText("Loading User Preferences");
+                            TimeUnit.SECONDS.sleep(2);
+                            panelSwitcher.show(mainContainer, "Main");
+                            //dispose();
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run(){
+                                    //new SystemFrame(systemSession);
+                                }
+                            });
+                        }else{
+                            indicatorLabel.setText("Login Invalid");
+                            TimeUnit.SECONDS.sleep(2);
+                            panelSwitcher.show(mainContainer, "Main");
+                        }
                     }else{
-                        indicatorLabel.setText("Login Invalid");
+                        indicatorLabel.setText("Unable To Connect To Web Server");
                         TimeUnit.SECONDS.sleep(2);
                         panelSwitcher.show(mainContainer, "Main");
                     }
+                        
                     
                 }catch(InterruptedException ie){
                     ie.printStackTrace();

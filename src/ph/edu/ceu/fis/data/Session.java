@@ -27,13 +27,13 @@ public class Session{
     public Session(String userID){
         this.userID = userID;
     }
-    
+
     public static boolean loginAuthentication(String userID, String userPassword){
         boolean loginValid = false;
         try{
             
             Client wsClient =  Client.create();
-            WebResource webResource = wsClient.resource("http://" + Constants.getServerAddress() + ":" + Constants.getServerPort() + "/CEU_FIS_WS/user/LoginAuth");
+            WebResource webResource = wsClient.resource("http://" + DataUtils.getWebServerHost()[0] + ":" + DataUtils.getWebServerHost()[1] + "/CEU_FIS_WS/user/LoginAuth");
             ClientResponse wsResponse = webResource.queryParam("user_id", userID).queryParam("user_password", userPassword).accept("application/json").post(ClientResponse.class);
             if(wsResponse.getStatus()!=200){
                 ClientUtils.log(new java.util.Date() + "- Server Response: " + wsResponse.getStatus());
@@ -42,7 +42,7 @@ public class Session{
                 ClientUtils.log(new java.util.Date() + "- Server Response..............." + serverResponse.getString("server-response"));
                 loginValid = serverResponse.getBoolean("login-valid");
                 ClientUtils.log(new java.util.Date() + "- Attempting Login For User " + userID + "..............." + ClientUtils.parseBool(loginValid));
-            }
+}
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class Session{
         try{
             
             Client wsClient =  Client.create();
-            WebResource webResource = wsClient.resource("http://" + Constants.getServerAddress() + ":" + Constants.getServerPort() + "/CEU_FIS_WS/user/profile");
+            WebResource webResource = wsClient.resource("http://" + DataUtils.getWebServerHost()[0] + ":" + DataUtils.getWebServerHost()[1] + "/CEU_FIS_WS/user/profile");
             ClientResponse wsResponse = webResource.queryParam("user_id", userID).accept("application/json").post(ClientResponse.class);
             if(wsResponse.getStatus()!=200){
                 ClientUtils.log(new java.util.Date() + "- Server Response: " + wsResponse.getStatus());
