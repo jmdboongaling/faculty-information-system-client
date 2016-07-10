@@ -105,7 +105,7 @@ public class PictureLabel extends JLabel{
     Graphics2D g2 = output.createGraphics();
     g2.setComposite(AlphaComposite.Src);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g2.setColor(Color.WHITE);
+    g2.setColor(FrameWorkUtils.getSecondaryColor());
     g2.fill(new RoundRectangle2D.Float(0, 0, w, h, cornerRadius, cornerRadius));
 
     g2.setComposite(AlphaComposite.SrcAtop);

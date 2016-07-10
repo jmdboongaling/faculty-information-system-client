@@ -14,40 +14,53 @@
  **/
 package ph.edu.ceu.fis.gui;
 
-import java.awt.Color;
-import java.security.MessageDigest;
-import java.sql.Connection;
-import java.sql.DriverManager;
+
 import ph.edu.ceu.fis.utils.ClientUtils;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import org.apache.commons.dbutils.DbUtils;
-import org.mindrot.jbcrypt.BCrypt;
-import ph.edu.ceu.fis.data.Session;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.*;
+import ph.edu.ceu.fis.framework.FormLabel;
 import ph.edu.ceu.fis.framework.FrameWorkUtils;
+import ph.edu.ceu.fis.framework.WrapField;
+
 
 public class Main{
     
-    public static LoginForm loginForm;
+    
+    public static LoginForm loginForm; // Declared as static to be later accessed on logout event.
+    
+    /* Main method contains UI Variables being setup to match GUI Design parameters.
+     * String[]args is arguments passed during runtime.
+     */
     public static void main(String[]args){
         
-        ClientUtils.log(new java.util.Date() + "- Application Started...............[OK!]");
+        // System started!
+        ClientUtils.log(new java.util.Date() + " -  Application Started...............[OK!]");
+        
+        /*
+         * Starting login window on AWT Dispatch Thread
+         */
         SwingUtilities.invokeLater(new Runnable(){
             @Override
             public void run(){
-                UIManager.put("Separator.background", Color.BLACK);
-                UIManager.put("Separator.foreground", Color.BLACK.brighter().brighter().brighter());
-                UIManager.put("ScrollBar.background", Color.WHITE);
-                UIManager.put("ScrollBar.foreground", Color.WHITE);
-                UIManager.put("ScrollBar.thumb", Color.BLACK.brighter().brighter().brighter());
-                UIManager.put("ScrollBar.thumbDarkShadow", Color.BLACK.brighter().brighter().brighter());
-                UIManager.put("ScrollBar.thumbHighlight", Color.BLACK.brighter().brighter().brighter());
-                UIManager.put("ScrollBar.thumbShadow", Color.BLACK.brighter().brighter().brighter());
-                UIManager.put("ScrollBar.track", Color.WHITE);
-                UIManager.put("ScrollBar.trackHighlight", Color.WHITE);
-                UIManager.put("ToolTip.background", java.awt.Color.WHITE);
-                UIManager.put("ToolTip.font", ph.edu.ceu.fis.framework.FrameWorkUtils.getSystemFont().deriveFont(14f));
-                loginForm = new LoginForm();
+                UIManager.put("ToolTip.background", FrameWorkUtils.getSecondaryColor()); // Setting tool tip background color.
+                UIManager.put("ToolTip.font", FrameWorkUtils.getSystemFont().deriveFont(14f)); // Setting tool tip font.
+                UIManager.put("ScrollBar.background", FrameWorkUtils.getPrimaryColor().brighter());
+                UIManager.put("ScrollBar.foreground", FrameWorkUtils.getSecondaryColor());
+                UIManager.put("ScrollBar.thumb", FrameWorkUtils.getSecondaryColor());
+                UIManager.put("ScrollBar.thumbDarkShadow", FrameWorkUtils.getSecondaryColor());
+                UIManager.put("ScrollBar.thumbHighlight", FrameWorkUtils.getSecondaryColor());
+                UIManager.put("ScrollBar.thumbShadow", FrameWorkUtils.getSecondaryColor());
+                UIManager.put("ScrollBar.track", FrameWorkUtils.getPrimaryColor().brighter());
+                UIManager.put("ScrollBar.trackHighlight", FrameWorkUtils.getPrimaryColor().brighter());
+                UIManager.put("ScrollBar.width", 10);
+                UIManager.put("Separator.background", FrameWorkUtils.getSecondaryColor());
+                UIManager.put("Separator.foreground", FrameWorkUtils.getSecondaryColor());
+
+                loginForm = new LoginForm(); // Constructor of LoginForm class which opens Login Window.
+                //ClientUtils.log(ClientUtils.sha512Hash("13-11448", "profile_picture"));
+                //java.io.File f = new java.io.File("tmp//" + ClientUtils.sha512Hash("13-11448", "fis"));
+                //f.mkdir();
             }
         });
         
@@ -67,18 +80,8 @@ public class Main{
     }
     
     
-    /*public Main(){
-        try{
-            Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
-            Connection conn = DriverManager.getConnection("jdbc:derby:data;create=true", "fis_client", "26b3ba9fc3ba8e6bc6d009267337d705");
-            System.out.println("Goods");
-            DbUtils.closeQuietly(conn);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }*/
    
-    
+   
     
   
     

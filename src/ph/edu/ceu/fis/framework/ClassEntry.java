@@ -14,53 +14,35 @@
  **/
 package ph.edu.ceu.fis.framework; 
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class ClassEntry extends JPanel{
     
-    private String courseCode, 
-                   courseDescription, 
-                   courseSchedule, 
-                   semesterSchoolYear, 
-                   campus;
-            
-    public ClassEntry(String courseCode, String courseDescription, String courseSchedule, String semesterSchoolYear, String campus){
-        super(new GridLayout(1, 1));
-        this.courseCode = courseCode;
-        this.courseDescription = courseDescription;
-        this.courseSchedule = courseSchedule;
-        this.semesterSchoolYear = semesterSchoolYear;
-        this.campus = campus;
+    public ClassEntry(String courseID, String courseCode, String courseDescription, String courseDay, String courseTime, String courseRoom, String courseCampus, String courseSemesterYear, int listIndex){
+        super(new BorderLayout(5, 5));
         setOpaque(true);
-        setBackground(Color.WHITE);
-        setBorder(new CustomShadowBorder());
-        add(mainContainer());
-    }
-    
-    private JPanel mainContainer(){
-        JPanel mainContainer = new JPanel(new GridBagLayout());
-        mainContainer.setBorder(new EmptyBorder(5, 5, 5, 5));
-        GridBagConstraints gridbagConstraints = new GridBagConstraints();
-        gridbagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridbagConstraints.weightx = 1;
-        gridbagConstraints.gridx = 0;
-        gridbagConstraints.insets = new Insets(5, 0, 5, 0);
-        
-        FormLabel courseCodeLabel = new FormLabel("<HTML><B>Course Code: </B>" + courseCode + "</HTML>", Color.BLACK, 15f, SwingConstants.LEFT, 20),
-                  courseDescriptionLabel = new FormLabel("<HTML><B>Course Description: </B>" + courseDescription + "</HTML>", Color.BLACK, 15f, SwingConstants.LEFT, 20),
-                  courseSchedule = new FormLabel("<HTML><B>Schedule: </B>" + this.courseSchedule + "</HTML>", Color.BLACK, 15f, SwingConstants.LEFT, 20),
-                  semesterSchoolyearLabel = new FormLabel("<HTML><B>" + semesterSchoolYear + "</B></HTML>", Color.BLACK, 15f, SwingConstants.LEFT, 20),
-                  campusLabel = new FormLabel("<HTML><B>" + campus + "</B></HTML>", Color.BLACK, 15f, SwingConstants.LEFT, 20);
-        
-        mainContainer.add(courseCodeLabel, gridbagConstraints);
-        mainContainer.add(courseDescriptionLabel, gridbagConstraints);
-        mainContainer.add(courseSchedule, gridbagConstraints);
-        mainContainer.add(semesterSchoolyearLabel, gridbagConstraints);
-        mainContainer.add(campusLabel, gridbagConstraints);
-        
-        
-        return mainContainer;
+        Color backgroundColor;
+        if(listIndex % 2 != 0){
+            backgroundColor = FrameWorkUtils.getPrimaryColor();
+        }else{
+            backgroundColor = FrameWorkUtils.getPrimaryColor().brighter();
+        }
+        setBackground(backgroundColor);
+        setBorder(new EmptyBorder(5, 5, 5, 5));
+        JPanel infoPanel = new JPanel(new GridLayout(5, 1, 5, 5));
+        infoPanel.setOpaque(false);
+        infoPanel.add(new FormLabel(courseCode, FrameWorkUtils.getSecondaryColor(), 15f, SwingConstants.LEFT, 5));
+        infoPanel.add(new FormLabel(courseDescription, FrameWorkUtils.getSecondaryColor(), 13f, SwingConstants.LEFT, 5));
+        infoPanel.add(new FormLabel("<HTML><B>Day: </B>"+ courseDay + " <B>Time: </B>" + courseTime + " <B>Room: </B>" + courseRoom +"</HTML>", FrameWorkUtils.getSecondaryColor(), 13f, SwingConstants.LEFT, 5));
+        infoPanel.add(new FormLabel(courseCampus + " Campus", FrameWorkUtils.getSecondaryColor(), 13f, SwingConstants.LEFT, 5));
+        infoPanel.add(new FormLabel(courseSemesterYear, FrameWorkUtils.getSecondaryColor(), 13f, SwingConstants.LEFT, 5));
+
+        MenuButton viewButton = new MenuButton("View", 10f, new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/view.png")), backgroundColor);
+        add(new FormLabel(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/bullet.png")), 5), BorderLayout.WEST);
+        add(infoPanel, BorderLayout.CENTER);
+        add(viewButton, BorderLayout.EAST);
     }
 }

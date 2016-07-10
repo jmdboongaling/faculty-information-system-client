@@ -8,7 +8,7 @@
  ** #####  #######  #####          #       ###  #####  
  **                        #######   
  ** @author: jmdboongaling @edit:
- ** @Comments: 
+ ** @Comments: Bugs - Indicator icon doesn't change for web server button and ftp server button unless hovered.
  ** 
  ** 
  **/
@@ -19,6 +19,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.TimeUnit;
+import net.java.dev.designgridlayout.DesignGridLayout;
 import ph.edu.ceu.fis.data.DataUtils;
 import ph.edu.ceu.fis.data.Flags;
 import ph.edu.ceu.fis.data.Session;
@@ -27,80 +28,116 @@ import ph.edu.ceu.fis.utils.*;
 
 
 public class LoginForm extends JFrame{
-    private Flags systemStartupFlags = new Flags();
-    private UsernameField idField = new UsernameField("Username");
     
+    // Declaration of Session object which holds all information of current user.
+    public Session systemSession;
+    
+    // Flags constructor tests connection to Web Server and FTP Server.
+    private Flags systemStartupFlags = new Flags(); 
+    
+    // Declaration and initialization of custom Username field with placeholder of "Username".
+    private UsernameField idField = new UsernameField("Username"); 
+    
+    // Declaration and initialization of custom Password field with placeholder of "Password".
     private PasswordField passwordField = new PasswordField("Password");
     
-    private FormButton loginButton,
-                       registerButton,
-                       forgotButton,
-                       wsButton,
-                       ftpButton,
-                       settingsButton;
-    private FormLabel indicatorLabel;
+    private FormButton loginButton, // Declaration of custom JButton for login button.
+                       registerButton, // Declaration of custom JButton for registration button.
+                       forgotButton; // Declaration of custom JButton for forgot password button.
+                      
+    
+    private FormLabel indicatorLabel; // Declaration of custom JLabel for indicator text for loader.
+    
+    // Layout for switching in between panels in window.
     private CardLayout panelSwitcher = new CardLayout();
+    
+    // Main container for window.
     private JPanel mainContainer = new JPanel(panelSwitcher);
+    
+    /* LoginForm.class constructor the calls superclass(JFrame) constructor for setting title of window.
+     * Constructor also calls initComponents function.
+     */
     public LoginForm(){
-       super(DataUtils.getAppTitle());
-       initComponents();
+       super(DataUtils.getAppTitle()); // Superclass constructor to set title of window.
+       initComponents(); // Call initComponents function.
        
     }
     
     
-    
+    /* initComponents function sets window properties such as size, layout, etc.
+     * Adds all pages to be switched in the main container of the window.
+     */
     private void initComponents(){
         
+        // Setting default close operation: Program will exit when window is closed.
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getContentPane().setBackground(Color.WHITE);
+        // Setting background color of window.
+        getContentPane().setBackground(FrameWorkUtils.getSecondaryColor());
+        // Setting layout of window(GridLayout).
         setLayout(new GridLayout(1, 1, 0, 0));
-        setIconImage(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/icon.png")).getImage());
-        mainContainer.setOpaque(true);
-        mainContainer.setBackground(Color.WHITE);
-        mainContainer.add(windowContainer(), "Main");
-        mainContainer.add(preLoader(), "Load");
-        setContentPane(mainContainer);
-        setResizable(false);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-        ClientUtils.log(new java.util.Date() + "- Login Window Start...............[OK!]");
+        // Setting window icon.
+        //setIconImage(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/link.eps")).getImage());
+        setIconImages(new FrameWorkUtils().getIcons());
+        mainContainer.setOpaque(true); // Setting mainContainer as opaque.
+        mainContainer.setBackground(FrameWorkUtils.getSecondaryColor());// Setting background color of mainContainer.
+        mainContainer.add(windowContainer(), "Main");// Adding login page and referenced as "Main".
+        mainContainer.add(preLoader(), "Load");// Adding preloader page and refferenced as "Load".
+        setContentPane(mainContainer);// Setting mainContainer as content pane of window.
+        setResizable(false);// Setting window as not resizable.
+        pack();// Packing window into minimum size.
+        setLocationRelativeTo(null);// Centering window on startup.
+        setVisible(true);// Displaying window.
+        
+        // Logging window as displayed
+        ClientUtils.log(new java.util.Date() + " -  Login Window Start...............[OK!]");
         
         
         
     }
     
+    /* windowContainer function returns JLabel for background image.
+     * This function also adds the container for the login form.
+     */
     private JLabel windowContainer(){
+        
+        // Declaring and initializing container with background.
         JLabel windowContainer = new JLabel(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/login_background.png")));
-        windowContainer.setLayout(new BorderLayout());
+        // Setting layout of windowContainer to BorderLayout.
+        windowContainer.setLayout(new BorderLayout()); 
+        // Removing insets.
         windowContainer.setBorder(new EmptyBorder(0, 0, 0, 0));
+        //Adding login form to be placed on right side of container.
         windowContainer.add(formContainer(), BorderLayout.EAST);
+        //windowContainer.add(new SteelCheckBox(), BorderLayout.WEST);
         
         
         
+        // Returning the container.
         return windowContainer;
     }
     
-    private JLabel formContainer(){
-        JLabel formContainer = new JLabel(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/login_container.png")));
-        formContainer.setLayout(new GridLayout(1, 1));
-        formContainer.setBorder(new EmptyBorder(50, 50, 50, 50));
+    private JPanel formContainer(){
+        JPanel formContainer = new JPanel(new GridBagLayout());
+        formContainer.setOpaque(false);
+        formContainer.setBorder(new EmptyBorder(20, 20, 20, 50));
+       
+
         
         passwordField.getTextField().addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                doLogin();
+                startSystem(idField.getText().trim(), passwordField.getText());
             }
         });
         
-        loginButton = new FormButton("Login", Color.WHITE, 16f);
-        registerButton = new FormButton("Register", Color.WHITE, 16f);
-        forgotButton = new FormButton("Forgot Password?", Color.WHITE, 16f);
+        loginButton = new FormButton("Login", 16f);
+        registerButton = new FormButton("Register", 16f);
+        forgotButton = new FormButton("Forgot Password?", 16f);
         
         loginButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){  
-                doLogin();
+                startSystem(idField.getText().trim(), passwordField.getText());
             }
         });
         registerButton.addActionListener(new ActionListener(){
@@ -114,174 +151,93 @@ public class LoginForm extends JFrame{
         buttonPanel.add(loginButton);
                 buttonPanel.add(registerButton);
 
-        JPanel loginPanel = new JPanel(new GridLayout(6, 1, 5, 5));
-        loginPanel.setBorder(new EmptyBorder(20, 20, 0, 20));
-        loginPanel.setOpaque(false);
-        loginPanel.add(new FormLabel("Login", Color.WHITE, 22f, SwingConstants.CENTER, 120));
-        loginPanel.add(idField);
-        loginPanel.add(passwordField);
-        loginPanel.add(buttonPanel);
-        loginPanel.add(forgotButton);
-        loginPanel.add(statusPanel());
-        
+        JPanel loginPanel = new JPanel();
+        loginPanel.setOpaque(true);
+        loginPanel.setBorder(new EmptyBorder(50, 20, 50, 20));
+        loginPanel.setBackground(FrameWorkUtils.getPrimaryColor());
 
+        DesignGridLayout formLayout = new DesignGridLayout(loginPanel);
+        formLayout.row().center().add(new FormLabel("Login", FrameWorkUtils.getSecondaryColor(), 22f, SwingConstants.CENTER, 120));
+        formLayout.row().grid().add(idField);
+        formLayout.row().grid().add(passwordField);
+        formLayout.row().grid().add(buttonPanel);
+        formLayout.row().grid().add(forgotButton);
+        
         formContainer.add(loginPanel);
+        
         return formContainer;
     }
     
-    private JPanel statusPanel(){
-        JPanel statusPanel = new JPanel(new GridLayout(1, 3, 5, 5));
-        statusPanel.setOpaque(false);
-        if(systemStartupFlags.serverIsAvailable()){
-            wsButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ws_ok.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ws_ok_focus.png")), Color.WHITE);
-        }else{
-            wsButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ws_fail.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ws_fail_focus.png")), Color.WHITE);
-        }
-        
-        if(systemStartupFlags.ftpIsConnected()){
-            ftpButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ftp_ok.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ftp_ok_focus.png")), Color.WHITE);
-        }else{
-            ftpButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ftp_fail.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ftp_fail_focus.png")), Color.WHITE);
-        }
-        settingsButton = new FormButton(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/settings_icon.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/settings_icon_focus.png")), Color.WHITE);
-        
-        wsButton.setToolTipText("Attempting Connection Web Server: " + DataUtils.getWebServerHost()[0] + "At Port " + DataUtils.getWebServerHost()[1]);
-        wsButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                panelSwitcher.show(mainContainer, "Load");
-                indicatorLabel.setText("Connecting to Web Server");
-                connectToWS().start();
-            }
-        });
-        
-        ftpButton.setToolTipText("Attempting Connection FTP Server: " + DataUtils.getFTPServerHost()[0] + "At Port " + DataUtils.getFTPServerHost()[1]);
-        ftpButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                panelSwitcher.show(mainContainer, "Load");
-                indicatorLabel.setText("Connecting to FTP Server");
-                connectToFTP().start();
-            }
-        });
-        statusPanel.add(wsButton);
-        statusPanel.add(ftpButton);
-        statusPanel.add(settingsButton);
-        return statusPanel;
-    }
+   
     
     private JPanel preLoader(){
         JLabel preLoader = new JLabel(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/loading.gif")));
         preLoader.setBorder(new EmptyBorder(0, 150, 0, 150));
-        indicatorLabel = new FormLabel("Loading", Color.BLACK, 25f);
+        indicatorLabel = new FormLabel("Loading", FrameWorkUtils.getPrimaryColor(), 25f);
         JPanel container = new JPanel(new BorderLayout());
-        container.setOpaque(false);
+        container.setOpaque(true);
+        container.setBackground(Color.WHITE);
         container.setBorder(new EmptyBorder(0, 0, 100, 0));
         container.add(preLoader, BorderLayout.CENTER);
         container.add(indicatorLabel, BorderLayout.SOUTH);
         return container;
     }
     
-    private void doLogin(){
-        panelSwitcher.show(mainContainer, "Load");
-        initSystem(idField.getText().trim(), passwordField.getText()).start();
-    }
-    private Thread connectToWS(){
-        Thread connectToWS = new Thread(new Runnable(){
-            @Override
-            public void run(){
-                try{TimeUnit.SECONDS.sleep(2);}catch(InterruptedException ie){ie.printStackTrace();}
-                systemStartupFlags.retryConnectToWS();
-                wsButton.setIcons(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ws_load.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ws_load_focus.png")));
-                if(systemStartupFlags.serverIsAvailable()){
-                    try{TimeUnit.SECONDS.sleep(2);}catch(InterruptedException ie){ie.printStackTrace();}
-                    indicatorLabel.setText("Connection Successful");
-                    wsButton.setIcons(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ws_ok.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ws_ok_focus.png")));
-                }else{
-                    try{TimeUnit.SECONDS.sleep(2);}catch(InterruptedException ie){ie.printStackTrace();}
-                    indicatorLabel.setText("Connection Failed");
-                    wsButton.setIcons(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ws_fail.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ws_fail_focus.png")));       
-                }
-                try{TimeUnit.SECONDS.sleep(2);}catch(InterruptedException ie){ie.printStackTrace();}
-                panelSwitcher.show(mainContainer, "Main");
-            }
-        });
-        
-        return connectToWS;
-    }
+   
     
-    private Thread connectToFTP(){
-        Thread connectToFTP = new Thread(new Runnable(){
-            @Override
-            public void run(){
-                try{TimeUnit.SECONDS.sleep(2);}catch(InterruptedException ie){ie.printStackTrace();}
-                systemStartupFlags.retryConnectToFTP();
-                ftpButton.setIcons(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ftp_load.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ftp_load_focus.png")));
-                if(systemStartupFlags.ftpIsConnected()){
-                    try{TimeUnit.SECONDS.sleep(2);}catch(InterruptedException ie){ie.printStackTrace();}
-                    indicatorLabel.setText("Connection Successful");
-                    ftpButton.setIcons(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ftp_ok.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ftp_ok_focus.png")));
-                }else{
-                    try{TimeUnit.SECONDS.sleep(2);}catch(InterruptedException ie){ie.printStackTrace();}
-                    indicatorLabel.setText("Connection Successful");
-                    ftpButton.setIcons(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ftp_fail.png")), new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/ftp_fail_focus.png")));   
-                }
-                try{TimeUnit.SECONDS.sleep(2);}catch(InterruptedException ie){ie.printStackTrace();}
-                panelSwitcher.show(mainContainer, "Main");
-            }
-        });
-        return connectToFTP;
-    }
-    private Thread initSystem(String userID, String userPassword){
-        
+    
+    
+    private void startSystem(String userID, String userPassword){
+        panelSwitcher.show(mainContainer, "Load");
         Thread startSystem = new Thread(new Runnable(){
             @Override
             public void run(){
-                Session systemSession = new Session(userID);
-                try{
-                    indicatorLabel.setText("Logging In");
-                    ClientUtils.log(new java.util.Date()+ "- Attempting Login For User " + userID + "...............[PENDING!]");
-                    TimeUnit.SECONDS.sleep(1);
-                    if(systemStartupFlags.serverIsAvailable()){
-                        if(systemSession.loginAuthentication(userID, userPassword)){  
-                            indicatorLabel.setText("Login Successful");
-                            TimeUnit.SECONDS.sleep(1);
-                            indicatorLabel.setText("Fetching Profile Information");
-                            //systemSession.invokeWsProfileInformation();
-                            TimeUnit.SECONDS.sleep(1);
-                            indicatorLabel.setText("Loading Profile");
-                            TimeUnit.SECONDS.sleep(1);
-                            indicatorLabel.setText("Loading User Preferences");
-                            TimeUnit.SECONDS.sleep(2);
+                systemSession = new Session(userID);
+                indicatorLabel.setText("Connecting to web server...");
+                if(Flags.serverIsAvailable()){
+                    ClientUtils.wait(1);
+                    indicatorLabel.setText("Successfully connected to web server...");
+                    ClientUtils.wait(1);
+                    indicatorLabel.setText("Connecting to file server...");
+                    if(Flags.ftpIsAvailable()){
+                        ClientUtils.wait(1);
+                        indicatorLabel.setText("Successfully connected to file server...");
+                        ClientUtils.wait(1);
+                        indicatorLabel.setText("Logging in...");
+                        if(Session.loginAuthentication(userID, userPassword)){
+                            ClientUtils.wait(1);
+                            indicatorLabel.setText("Credentials authenticated...");
+                            java.io.File f = new java.io.File("tmp//" + ClientUtils.sha512Hash(userID, "fis"));
+                            f.mkdir();
+                            ClientUtils.wait(1);
+                            indicatorLabel.setText("Loading system...");
+                            ClientUtils.wait(1);
+                            SystemFrame systemFrame = new SystemFrame(systemSession);
                             panelSwitcher.show(mainContainer, "Main");
-                            //dispose();
-                            SwingUtilities.invokeLater(new Runnable() {
-                                @Override
-                                public void run(){
-                                    //new SystemFrame(systemSession);
-                                }
-                            });
+                            dispose();
+                            systemFrame.setVisible(true);
                         }else{
-                            indicatorLabel.setText("Login Invalid");
-                            TimeUnit.SECONDS.sleep(2);
-                            panelSwitcher.show(mainContainer, "Main");
+                            ClientUtils.wait(1);
+                            indicatorLabel.setText("Invalid Credentials...");
+                            ClientUtils.wait(2);
+                            panelSwitcher.show(mainContainer, "Main");  
                         }
                     }else{
-                        indicatorLabel.setText("Unable To Connect To Web Server");
-                        TimeUnit.SECONDS.sleep(2);
+                        ClientUtils.wait(1);
+                        indicatorLabel.setText("Failed to connect to file server...");
+                        ClientUtils.wait(2);
                         panelSwitcher.show(mainContainer, "Main");
                     }
-                        
-                    
-                }catch(InterruptedException ie){
-                    ie.printStackTrace();
+                }else{
+                    indicatorLabel.setText("Failed to connect to web server...");
+                    ClientUtils.wait(2);
+                    panelSwitcher.show(mainContainer, "Main");
                 }
-               
+                
             }
         });
         
-        
-        return startSystem;
+        startSystem.start();
     }
     
     

@@ -27,81 +27,51 @@ import ph.edu.ceu.fis.utils.*;
 
 public class Flags{
 
-    private boolean wsIsConnected = false,
-                    dbIsConnected = false,
-                    ftpIsConnected = true,
-                    serverStatus;
-    
-    
-    
-    public Flags(){
-        initFlags();
-}
-    
-    private void initFlags(){
-        testWs();
-        testFTP();
-    }
-    public boolean serverIsAvailable(){
-        return serverStatus;
-    }
-    public boolean wsIsConnected(){
-        return wsIsConnected;
-    }
-    
-    public boolean ftpIsConnected(){
-        return ftpIsConnected;
-    }
-    
-    private void testWs(){
+    public static boolean serverIsAvailable(){
+        boolean wsIsConnected = false,
+                dbIsConnected = false,
+                serverIsAvailable = wsIsConnected && dbIsConnected;
         try{
             Client wsClient =  Client.create();
             WebResource webResource = wsClient.resource("http://" + DataUtils.getWebServerHost()[0] + ":" + DataUtils.getWebServerHost()[1] + "/CEU_FIS_WS/connection/connection-test");
             ClientResponse wsResponse = webResource.accept("application/json").post(ClientResponse.class);
-            if(wsResponse.getStatus()!=200){
-                ClientUtils.log(new java.util.Date() + "- Server Status..............." + ClientUtils.parseBool(wsIsConnected && dbIsConnected));
-                ClientUtils.log(new java.util.Date() + "- Database Status..............." + ClientUtils.parseBool(dbIsConnected));
-                ClientUtils.log(new java.util.Date() + "- Web Service Status..............." + ClientUtils.parseBool(wsIsConnected));
-                ClientUtils.log(new java.util.Date() + "- Server Response: " + wsResponse.getStatus());
+            if(wsResponse.getStatus()==200){
+               JSONObject serverResponse = new JSONObject(wsResponse.getEntity(String.class));
+                wsIsConnected = serverResponse.getBoolean("server_response");
+                dbIsConnected = serverResponse.getBoolean("database_response");
+                serverIsAvailable = wsIsConnected && dbIsConnected;
+                ClientUtils.log(new java.util.Date() + " -  Server Status..............." + ClientUtils.parseBool(wsIsConnected && dbIsConnected));
+                ClientUtils.log(new java.util.Date() + " -  Database Status..............." + ClientUtils.parseBool(dbIsConnected));
+                ClientUtils.log(new java.util.Date() + " -  Web Service Status..............." + ClientUtils.parseBool(wsIsConnected));
+            }else{
                 wsIsConnected = false;
                 dbIsConnected = false;
-                serverStatus = false;
-            }else{
-                JSONObject serverResponse = new JSONObject(wsResponse.getEntity(String.class));
-                wsIsConnected = serverResponse.getBoolean("server-response");
-                dbIsConnected = serverResponse.getBoolean("database-response");
-                serverStatus = wsIsConnected && dbIsConnected;
-                ClientUtils.log(new java.util.Date() + "- Server Status..............." + ClientUtils.parseBool(wsIsConnected && dbIsConnected));
-                ClientUtils.log(new java.util.Date() + "- Database Status..............." + ClientUtils.parseBool(dbIsConnected));
-                ClientUtils.log(new java.util.Date() + "- Web Service Status..............." + ClientUtils.parseBool(wsIsConnected));
-                
-                
+                serverIsAvailable = wsIsConnected && dbIsConnected;
+                ClientUtils.log(new java.util.Date() + " -  Server Status..............." + ClientUtils.parseBool(wsIsConnected && dbIsConnected));
+                ClientUtils.log(new java.util.Date() + " -  Server Response: " + wsResponse.getStatus());  
             }
         }catch(ClientHandlerException che){
-            ClientUtils.log(new java.util.Date() + "- Web Server Connection..........[FALSE!]\nError Message: " + che.getMessage());
+            ClientUtils.log(new java.util.Date() + " -  Web Server Connection..........[FALSE!]\nError Message: " + che.getMessage());
             
         }catch(JSONException je){
             je.printStackTrace();
         }
+        
+        return serverIsAvailable;
     }
     
-    private void testFTP(){
-        ftpIsConnected = false;
+    public static boolean ftpIsAvailable(){
+        boolean ftpIsAvailable = false;
         try{
             JSch jsch = new JSch();
             com.jcraft.jsch.Session session = jsch.getSession(DataUtils.getFTPServerHost()[2], DataUtils.getFTPServerHost()[0], Integer.parseInt(DataUtils.getFTPServerHost()[1]));
             session.setPassword(DataUtils.getFTPServerHost()[3]);
             session.setConfig("StrictHostKeyChecking", "no");
-            System.out.println("Establishing Connection...");
             session.connect();
-            System.out.println("Connection established.");
-            System.out.println("Crating SFTP Channel.");
             Channel channel = session.openChannel("sftp");
             channel.connect();
             ChannelSftp sftpChannel = (ChannelSftp)channel; //(ChannelSftp) session.openChannel("sftp");
-
-            System.out.println("SFTP Channel created.");
-            ftpIsConnected = true;
+            ftpIsAvailable = true;
             sftpChannel.disconnect();
             channel.disconnect();
             session.disconnect();
@@ -110,23 +80,7 @@ public class Flags{
         }catch(Exception e){
             e.printStackTrace();
         }
-    
-        
-
-
-    
-        
-         
-            
-                    
-    }
-    
-    public void retryConnectToWS(){
-        testWs();
-    }
-    
-    public void retryConnectToFTP(){
-        testFTP();
+        return ftpIsAvailable;                
     }
 
 }

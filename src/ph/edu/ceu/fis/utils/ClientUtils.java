@@ -16,6 +16,7 @@ package ph.edu.ceu.fis.utils;
 
 import java.security.MessageDigest;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class ClientUtils{
     
@@ -66,6 +67,23 @@ public class ClientUtils{
             e.printStackTrace();
         }
         return sb.toString().substring(0, 32);
+    }
+     
+    
+    public static String ordinal(int i) {
+        String[] sufixes = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
+        switch (i % 100) {
+        case 11:
+        case 12:
+        case 13:
+            return i + "th";
+        default:
+            return i + sufixes[i % 10];
+
+        }
+    }
+    public static void wait(int seconds){
+        try{TimeUnit.SECONDS.sleep(seconds);}catch(InterruptedException ie){ie.printStackTrace();}
     }
 
 }

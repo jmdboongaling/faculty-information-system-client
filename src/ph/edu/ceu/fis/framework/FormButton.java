@@ -21,6 +21,57 @@ import java.awt.event.*;
 
 public class FormButton extends JButton{
     
+    
+    public FormButton(String buttonText, float textSize){
+        super(buttonText);
+        setFocusPainted(false);
+        setContentAreaFilled(false);
+        setOpaque(false);
+        setFont(FrameWorkUtils.getSystemFont().deriveFont(textSize));
+        setForeground(FrameWorkUtils.getSecondaryColor());
+        setBorderPainted(false);
+        addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                setContentAreaFilled(true);
+                setOpaque(true);
+                setBackground(FrameWorkUtils.getSecondaryColor());
+                setForeground(FrameWorkUtils.getPrimaryColor());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e){
+                setContentAreaFilled(true);
+                setOpaque(true);
+                setBackground(FrameWorkUtils.getSecondaryColor());
+                setForeground(FrameWorkUtils.getPrimaryColor());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e){
+                setContentAreaFilled(false);
+                setOpaque(false);
+                setBackground(null);
+                setForeground(FrameWorkUtils.getSecondaryColor());
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e){
+                setContentAreaFilled(true);
+                setOpaque(true);
+                setBackground(FrameWorkUtils.getSecondaryColor());
+                setForeground(FrameWorkUtils.getPrimaryColor());
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e){
+                setContentAreaFilled(false);
+                setOpaque(false);
+                setBackground(null);
+                setForeground(FrameWorkUtils.getSecondaryColor());
+            }
+        });
+    }
     public FormButton(String buttonText, Color textColor, float textSize){
         super(buttonText);
         setFocusPainted(false);
@@ -35,16 +86,16 @@ public class FormButton extends JButton{
             public void mouseClicked(MouseEvent e){
                 setContentAreaFilled(true);
                 setOpaque(true);
-                setBackground(Color.WHITE);
-                setForeground(Color.BLACK);
+                setBackground(FrameWorkUtils.getSecondaryColor());
+                setForeground(FrameWorkUtils.getPrimaryColor());
             }
 
             @Override
             public void mousePressed(MouseEvent e){
                 setContentAreaFilled(true);
                 setOpaque(true);
-                setBackground(Color.WHITE);
-                setForeground(Color.BLACK);
+                setBackground(FrameWorkUtils.getSecondaryColor());
+                setForeground(FrameWorkUtils.getPrimaryColor());
             }
 
             @Override
@@ -52,15 +103,15 @@ public class FormButton extends JButton{
                 setContentAreaFilled(false);
                 setOpaque(false);
                 setBackground(null);
-                setForeground(Color.WHITE);
+                setForeground(FrameWorkUtils.getSecondaryColor());
             }
 
             @Override
             public void mouseEntered(MouseEvent e){
                 setContentAreaFilled(true);
                 setOpaque(true);
-                setBackground(Color.WHITE);
-                setForeground(Color.BLACK);
+                setBackground(FrameWorkUtils.getSecondaryColor());
+                setForeground(FrameWorkUtils.getPrimaryColor());
             }
 
             @Override
@@ -68,7 +119,7 @@ public class FormButton extends JButton{
                 setContentAreaFilled(false);
                 setOpaque(false);
                 setBackground(null);
-                setForeground(Color.WHITE);
+                setForeground(FrameWorkUtils.getSecondaryColor());
             }
         });
     }
@@ -124,7 +175,7 @@ public class FormButton extends JButton{
                 setIcon(buttonIconFocus);
                 setContentAreaFilled(true);
                 setOpaque(true);
-                setBackground(Color.WHITE);
+                setBackground(FrameWorkUtils.getSecondaryColor());
             }
 
             @Override
@@ -132,7 +183,7 @@ public class FormButton extends JButton{
                 setIcon(buttonIconFocus);
                 setContentAreaFilled(true);
                 setOpaque(true);
-                setBackground(Color.WHITE);
+                setBackground(FrameWorkUtils.getSecondaryColor());
             }
 
             @Override
@@ -148,7 +199,7 @@ public class FormButton extends JButton{
                 setIcon(buttonIconFocus);
                 setContentAreaFilled(true);
                 setOpaque(true);
-                setBackground(Color.WHITE);
+                setBackground(FrameWorkUtils.getSecondaryColor());
             }
 
             @Override
@@ -237,7 +288,7 @@ public class FormButton extends JButton{
                 setIcon(buttonIconFocus);
                 setContentAreaFilled(true);
                 setOpaque(true);
-                setBackground(Color.WHITE);
+                setBackground(FrameWorkUtils.getSecondaryColor());
             }
 
             @Override
@@ -245,7 +296,7 @@ public class FormButton extends JButton{
                 setIcon(buttonIconFocus);
                 setContentAreaFilled(true);
                 setOpaque(true);
-                setBackground(Color.WHITE);
+                setBackground(FrameWorkUtils.getSecondaryColor());
             }
 
             @Override
@@ -261,7 +312,7 @@ public class FormButton extends JButton{
                 setIcon(buttonIconFocus);
                 setContentAreaFilled(true);
                 setOpaque(true);
-                setBackground(Color.WHITE);
+                setBackground(FrameWorkUtils.getSecondaryColor());
             }
 
             @Override

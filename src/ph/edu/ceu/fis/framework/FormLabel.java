@@ -17,7 +17,6 @@ package ph.edu.ceu.fis.framework;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class FormLabel extends JLabel{
     

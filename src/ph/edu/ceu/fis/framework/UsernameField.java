@@ -28,13 +28,13 @@ public class UsernameField extends JPanel{
     public UsernameField(String textFieldText){
         super(new BorderLayout(10, 10));
         setOpaque(false);
-        setBorder(new MatteBorder(0, 0, 1, 0, Color.WHITE));
+        setBorder(new MatteBorder(0, 0, 1, 0, FrameWorkUtils.getSecondaryColor()));
         iconLabel.setOpaque(false);
         iconLabel.setIcon(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/username_icon.png")));
         iconLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
         textField.setText(textFieldText);
         textField.setOpaque(false);
-        textField.setForeground(Color.WHITE);
+        textField.setForeground(FrameWorkUtils.getSecondaryColor());
         textField.setFont(FrameWorkUtils.getSystemFont().deriveFont(16f));
         textField.setBorder(null);
         
@@ -43,8 +43,8 @@ public class UsernameField extends JPanel{
             @Override
             public void focusGained(FocusEvent fe){
                 setOpaque(true);
-                setBackground(Color.WHITE);
-                textField.setForeground(Color.BLACK);
+                setBackground(FrameWorkUtils.getSecondaryColor());
+                textField.setForeground(FrameWorkUtils.getPrimaryColor());
                 if(textField.getText().equals(textFieldText)){
                     textField.setText("");
                 }
@@ -55,7 +55,7 @@ public class UsernameField extends JPanel{
             public void focusLost(FocusEvent fe){
                 setOpaque(false);
                 setBackground(null);
-                textField.setForeground(Color.WHITE);
+                textField.setForeground(FrameWorkUtils.getSecondaryColor());
                 if(textField.getText().equals("")){
                     textField.setText(textFieldText);
                 }
