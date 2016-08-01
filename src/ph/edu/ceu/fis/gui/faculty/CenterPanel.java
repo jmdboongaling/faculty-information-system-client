@@ -14,31 +14,29 @@
  **/
 package ph.edu.ceu.fis.gui.faculty;
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
+import java.util.HashMap;
+import javax.swing.*;
+import javax.swing.border.*;
 import net.java.dev.designgridlayout.DesignGridLayout;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import ph.edu.ceu.fis.data.Session;
-import ph.edu.ceu.fis.framework.BlurLayerUI;
-import ph.edu.ceu.fis.framework.BulletinEntry;
+import ph.edu.ceu.fis.data.UserFiles;
 import ph.edu.ceu.fis.framework.ClassEntry;
-import ph.edu.ceu.fis.framework.CustomScollBar;
 import ph.edu.ceu.fis.framework.CustomScrollPane;
+import ph.edu.ceu.fis.framework.FormButton;
 import ph.edu.ceu.fis.framework.FormLabel;
 import ph.edu.ceu.fis.framework.FrameWorkUtils;
 import ph.edu.ceu.fis.framework.MenuButton;
+import ph.edu.ceu.fis.framework.MessageDialog;
 import ph.edu.ceu.fis.framework.PictureLabel;
+import ph.edu.ceu.fis.framework.TransferEntry;
 import ph.edu.ceu.fis.gui.LogoutPopup;
 import ph.edu.ceu.fis.gui.PanelPreloader;
-import ph.edu.ceu.fis.gui.SystemFrame;
 import ph.edu.ceu.fis.gui.SystemLock;
 import ph.edu.ceu.fis.utils.ClientUtils;
 
@@ -58,10 +56,13 @@ public class CenterPanel extends JPanel{
     private DesignGridLayout coursePanelLayout = new DesignGridLayout(coursePanel);
 
         
-    private ArrayList<ArrayList<String>> courseEntries = new ArrayList<ArrayList<String>>();
+    private ArrayList<HashMap<String, String>> courseEntries = new ArrayList<HashMap<String, String>>();
     
-    private MenuButton reloadButton = new MenuButton("", 0f, new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/reload.png")), FrameWorkUtils.getPrimaryColor().brighter());
-
+    private MenuButton reloadButton = new MenuButton("", 0f, new ImageIcon("images/reload.png"), FrameWorkUtils.getPrimaryColor().brighter());
+    
+    private PictureLabel profilePicture;
+    
+    private JFileChooser fileBrowser;
     public CenterPanel(Session systemSession){
         this.systemSession = systemSession;
         setLayout(gridBagLayout);
@@ -89,9 +90,32 @@ public class CenterPanel extends JPanel{
         topPanel.setOpaque(true);
         topPanel.setBackground(FrameWorkUtils.getPrimaryColor());
         
-        PictureLabel y = new PictureLabel(systemSession.getProfilePicture(), 100, 100, true);
+        profilePicture = new PictureLabel(systemSession.getProfilePicture(), 100, 100, true);
+        profilePicture.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                changeProfilePicture(profilePicture, profilePicture.getX(), profilePicture.getY());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                changeProfilePicture(profilePicture, profilePicture.getX(), profilePicture.getY());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
         FormLabel nameLabel =  new FormLabel(systemSession.getProfileInformation().get("first_name") + " " + systemSession.getProfileInformation().get("last_name"), FrameWorkUtils.getSecondaryColor(), 20f);
-        y.setAlignmentX(Component.CENTER_ALIGNMENT);
+        profilePicture.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         FormLabel positionLabel = new FormLabel(systemSession.getProfileInformation().get("employee_position"), FrameWorkUtils.getSecondaryColor(), 15f);
@@ -103,14 +127,14 @@ public class CenterPanel extends JPanel{
         
         DesignGridLayout infoPanelLayout = new DesignGridLayout(infoPanel);
 
-        infoPanelLayout.row().center().add(y);
+        infoPanelLayout.row().center().add(profilePicture);
         infoPanelLayout.row().center().add(nameLabel);
         infoPanelLayout.row().center().add(positionLabel);
         infoPanelLayout.row().center().add(departmentLabel);
         
-        MenuButton logoutButton = new MenuButton("Logout", 12f, new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/logout16.png")), FrameWorkUtils.getPrimaryColor()),
-                   modeButton = new MenuButton("Mode", 12f, new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/session.png")), FrameWorkUtils.getPrimaryColor()),
-                   lockButton = new MenuButton("Lock", 12f, new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/lock.png")), FrameWorkUtils.getPrimaryColor());
+        MenuButton logoutButton = new MenuButton("Logout", 12f, new ImageIcon("images/logout16.png"), FrameWorkUtils.getPrimaryColor()),
+                   modeButton = new MenuButton("Mode", 12f, new ImageIcon("images/session.png"), FrameWorkUtils.getPrimaryColor()),
+                   lockButton = new MenuButton("Lock", 12f, new ImageIcon("images/lock.png"), FrameWorkUtils.getPrimaryColor());
         
         logoutButton.addActionListener(new ActionListener(){
             @Override
@@ -161,7 +185,7 @@ public class CenterPanel extends JPanel{
             }
         });
         
-        JLabel titleLabel = new JLabel(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/latest_class.png")));
+        JLabel titleLabel = new JLabel(new ImageIcon("images/latest_class.png"));
         titleLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
         titleLabel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         titleLabel.add(reloadButton);
@@ -169,29 +193,11 @@ public class CenterPanel extends JPanel{
         titlePanel.add(titleLabel, BorderLayout.NORTH);
         titlePanel.add(new FormLabel("Latest Service Record", FrameWorkUtils.getSecondaryColor(), 18f, SwingConstants.CENTER, 0), BorderLayout.CENTER);
         coursePanel.setOpaque(false);
-        courseEntries = systemSession.getCourses();
+        courseEntries = systemSession.getLatestCourses();
         for(int i = 0; i < courseEntries.size(); i++){
-            ArrayList<String> courseInfo = courseEntries.get(i);
-            /*
-            courseInfo.add(serverResponse.getJSONObject(i).getString("course_id"));0
-            courseInfo.add(serverResponse.getJSONObject(i).getString("course_code"));1
-            courseInfo.add(serverResponse.getJSONObject(i).getString("course_description"));2
-            courseInfo.add(serverResponse.getJSONObject(i).getString("course_day"));3
-            courseInfo.add(serverResponse.getJSONObject(i).getString("course_time"));4
-            courseInfo.add(serverResponse.getJSONObject(i).getString("course_building"));5
-            courseInfo.add(serverResponse.getJSONObject(i).getString("course_room"));6
-            courseInfo.add(serverResponse.getJSONObject(i).getString("course_year_section"));7
-            courseInfo.add(serverResponse.getJSONObject(i).getString("course_semester"));8
-            courseInfo.add(serverResponse.getJSONObject(i).getString("course_school_year"));9
-            courseInfo.add(serverResponse.getJSONObject(i).getString("course_campus"));10
-            courseInfo.add(serverResponse.getJSONObject(i).getString("lec_units"));11
-            courseInfo.add(serverResponse.getJSONObject(i).getString("lab_units"));12
-            */
-            //String courseID, String courseCode, String courseDescription, String courseDay, 
-            //String courseTime, String courseRoom, String courseCampus, String courseSemesterYear, 
-            //int listIndex
+          
             
-            coursePanelLayout.row().grid().add(new ClassEntry(courseInfo.get(0), courseInfo.get(1), courseInfo.get(2), courseInfo.get(3), courseInfo.get(4), courseInfo.get(5) + courseInfo.get(6), courseInfo.get(10), courseInfo.get(8) + " Semester S.Y. " + courseInfo.get(9), i));
+            coursePanelLayout.row().grid().add(new ClassEntry(courseEntries.get(i), i));
         }
         switchPanel.setOpaque(false);
         switchPanel.add(new CustomScrollPane(coursePanel), "Main");
@@ -203,7 +209,7 @@ public class CenterPanel extends JPanel{
     
     private void doLogout(){
         
-      new LogoutPopup((JFrame) SwingUtilities.getWindowAncestor(this));
+      new LogoutPopup((JFrame) SwingUtilities.getWindowAncestor(this), systemSession);
     }
     
     private void doSystemLock(){
@@ -214,33 +220,14 @@ public class CenterPanel extends JPanel{
             @Override
             public void run(){
                 panelSwitcher.show(switchPanel, "Load");
-                courseEntries = systemSession.getCourses();
+                courseEntries = systemSession.getLatestCourses();
                 coursePanelLayout = null;
                 coursePanel.setLayout(null);
                 coursePanel.removeAll();
                 coursePanelLayout = new DesignGridLayout(coursePanel);
                 for(int i = 0; i < courseEntries.size(); i++){
-                    ArrayList<String> courseInfo = courseEntries.get(i);
-                    /*
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("course_id"));0
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("course_code"));1
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("course_description"));2
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("course_day"));3
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("course_time"));4
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("course_building"));5
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("course_room"));6
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("course_year_section"));7
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("course_semester"));8
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("course_school_year"));9
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("course_campus"));10
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("lec_units"));11
-                    courseInfo.add(serverResponse.getJSONObject(i).getString("lab_units"));12
-                    */
-                    //String courseID, String courseCode, String courseDescription, String courseDay, 
-                    //String courseTime, String courseRoom, String courseCampus, String courseSemesterYear, 
-                    //int listIndex
-
-                    coursePanelLayout.row().grid().add(new ClassEntry(courseInfo.get(0), courseInfo.get(1), courseInfo.get(2), courseInfo.get(3), courseInfo.get(4), courseInfo.get(5) + courseInfo.get(6), courseInfo.get(10), courseInfo.get(8) + " Semester S.Y. " + courseInfo.get(9), i));
+                    HashMap<String, String> courseInfo = courseEntries.get(i);
+                    coursePanelLayout.row().grid().add(new ClassEntry(courseInfo, i));
                 }
                 
                 coursePanel.revalidate();
@@ -249,5 +236,75 @@ public class CenterPanel extends JPanel{
             }
         });
         reloadBulletin.start();
+    }
+    
+    private void changeProfilePicture(Component componentInvoker, int x, int y){
+        
+        JPopupMenu detailsPopup = new JPopupMenu();
+        detailsPopup.setBackground(FrameWorkUtils.getPrimaryColor().brighter());
+        detailsPopup.setBorder(new LineBorder(FrameWorkUtils.getAccentColor()));
+        JPanel mainContainer = new JPanel(){
+            @Override
+            public void remove(int index){
+                //Do Nothing
+            }
+        };
+        
+        mainContainer.setOpaque(true);
+        mainContainer.setBackground(FrameWorkUtils.getPrimaryColor().brighter());
+        FormButton uploadButton = new FormButton("Change Profile Picture", 14f);
+        uploadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectFile();
+            }
+        });
+        mainContainer.add(uploadButton);
+        
+        detailsPopup.add(mainContainer);
+        detailsPopup.show(componentInvoker, x, y);
+    
+    }
+    
+    public void selectFile(){
+        fileBrowser = null;
+        File selectedFile;
+        LookAndFeel previousLF = UIManager.getLookAndFeel();
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            fileBrowser = new JFileChooser();
+            UIManager.setLookAndFeel(previousLF);
+        } catch (IllegalAccessException | UnsupportedLookAndFeelException | InstantiationException | ClassNotFoundException e) {}
+        int userChoice = fileBrowser.showOpenDialog(new JFrame("File Upload"));
+        if(userChoice == JFileChooser.APPROVE_OPTION){
+            selectedFile = new File(fileBrowser.getSelectedFile().getAbsolutePath());
+            if(selectedFile.isFile()){
+                if(selectedFile.length() < 2500000){
+                    if(UserFiles.isAllowedImage(FilenameUtils.getExtension(selectedFile.getAbsolutePath()))){
+                        try{
+                            Thread uploadPicture = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    profilePicture.setIcon(new ImageIcon("images/panel_preloader.gif"));
+                                    ClientUtils.wait(3);
+                                    systemSession.changeProfilePicture(selectedFile);
+                                    profilePicture.setIcon(systemSession.getProfilePicture(), 100, 100, true);
+                                }
+                            });
+                            uploadPicture.start();
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }else{
+                        MessageDialog.showMessage("Prohibited File Format", "The file you are is of a prohibited file type.\n\nFiltering files that can be uploaded to the system makes sure all data is secure and not vulnerable to malicious programs or attacks that may be in the uploaded file/s. Only files with the .jpg file extension are allowed for this operation.");
+                    }
+                }else{
+                    MessageDialog.showMessage("File Is Too Big", "The file you are trying to upload is larger than 2.5MB.");
+                }
+            }else{
+                selectFile();
+            }
+
+        }
     }
 }

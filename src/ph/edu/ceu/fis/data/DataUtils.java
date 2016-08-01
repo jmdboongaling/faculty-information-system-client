@@ -14,11 +14,8 @@
  **/
 package ph.edu.ceu.fis.data; 
 
-import java.util.HashMap;
 import java.sql.*;
 import org.apache.commons.dbutils.DbUtils;
-import org.mindrot.jbcrypt.BCrypt;
-import ph.edu.ceu.fis.utils.ClientUtils;
 
 public class DataUtils{
     
@@ -49,7 +46,7 @@ public class DataUtils{
     }
     
     public static String getMachineKey(){
-        return getMachineID() + System.getProperty("os.name") + System.getProperty("os.version") + System.getProperty("os.arch") + System.getProperty("user.name");
+        return "7F1D8F5H7J6J2Linux3.19.0-59-genericamd64jmdboongaling";//getMachineID() + System.getProperty("os.name") + System.getProperty("os.version") + System.getProperty("os.arch") + System.getProperty("user.name");
     }
     
     public static String[] getWebServerHost(){
@@ -73,7 +70,7 @@ public class DataUtils{
             DbUtils.closeQuietly(queryStatement);
             DbUtils.closeQuietly(embeddedConnection);
         }
-        return webServer;
+        return new String[]{"192.168.30.1", "8084"};//webServer;
     }
     
     public static String[] getFTPServerHost(){
@@ -99,7 +96,7 @@ public class DataUtils{
             DbUtils.closeQuietly(queryStatement);
             DbUtils.closeQuietly(embeddedConnection);
         }
-        return webServer;
+        return new String[]{"192.168.30.1", "22", "fis_client", "26b3ba9fc3ba8e6bc6d009267337d705"};//webServer;
     }
     
    

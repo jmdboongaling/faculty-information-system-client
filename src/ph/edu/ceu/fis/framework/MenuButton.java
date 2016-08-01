@@ -14,10 +14,9 @@
  **/
 package ph.edu.ceu.fis.framework; 
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
 public class MenuButton extends JButton{
     

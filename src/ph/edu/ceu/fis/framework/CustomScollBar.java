@@ -14,10 +14,8 @@
  **/
 package ph.edu.ceu.fis.framework; 
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
-import java.awt.event.*;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 public class CustomScollBar extends JScrollBar{
@@ -47,5 +45,6 @@ public class CustomScollBar extends JScrollBar{
         });
         
         setUnitIncrement(16);
+        setValue(getMinimum());
     }
 }

@@ -14,11 +14,12 @@
  **/
 package ph.edu.ceu.fis.gui.faculty;
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import javax.swing.*;
+import javax.swing.border.*;
 import net.java.dev.designgridlayout.DesignGridLayout;
 import ph.edu.ceu.fis.data.Session;
 import ph.edu.ceu.fis.framework.BulletinEntry;
@@ -48,9 +49,9 @@ public class LeftPanel extends JPanel{
                          manilaCheckBox = new FormCheckBox("Manila"),
                          malolosCheckBox = new FormCheckBox("Malolos");
     
-    private MenuButton reloadButton = new MenuButton("", 0f, new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/reload.png")), FrameWorkUtils.getPrimaryColor());
+    private MenuButton reloadButton = new MenuButton("", 0f, new ImageIcon("images/reload.png"), FrameWorkUtils.getPrimaryColor().brighter());
     
-    private ArrayList<ArrayList<String>> bulletinEntries = new ArrayList<ArrayList<String>>();
+    private ArrayList<HashMap<String, String>> bulletinEntries = new ArrayList<HashMap<String, String>>();
     
     public LeftPanel(Session systemSession){
         this.systemSession = systemSession;
@@ -84,19 +85,6 @@ public class LeftPanel extends JPanel{
         titlePanel.setBackground(FrameWorkUtils.getPrimaryColor().brighter());
         titlePanel.setBorder(new EmptyBorder(10, 5, 5, 5));
         
-        titlePanel.add(new JLabel(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/bulletin.png"))), BorderLayout.NORTH);
-        titlePanel.add(new FormLabel("Bulletin", FrameWorkUtils.getSecondaryColor(), 18f, SwingConstants.CENTER, 0), BorderLayout.CENTER);
-        
-        
-        
-        bulletinPanel.setOpaque(false);
-        bulletinEntries = systemSession.getBulletins(true, true, true);
-        for(int i = 0; i < bulletinEntries.size(); i++){
-            ArrayList<String> bulletinInfo = bulletinEntries.get(i);
-            bulletinPanelLayout.row().grid().add(new BulletinEntry(bulletinInfo.get(0), bulletinInfo.get(1), bulletinInfo.get(2), bulletinInfo.get(3), bulletinInfo.get(4), bulletinInfo.get(5), i));
-        }
-        
-        
         reloadButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
@@ -104,12 +92,30 @@ public class LeftPanel extends JPanel{
             }
         });
         
+        JLabel titleLabel = new JLabel(new ImageIcon("images/bulletin.png"));
+        titleLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        titleLabel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        titleLabel.add(reloadButton);
+        
+        titlePanel.add(titleLabel, BorderLayout.NORTH);
+        titlePanel.add(new FormLabel("Bulletin", FrameWorkUtils.getSecondaryColor(), 18f, SwingConstants.CENTER, 0), BorderLayout.CENTER);
+        
+        
+        
+        bulletinPanel.setOpaque(false);
+        bulletinEntries = systemSession.getBulletins(true, true, true);
+        for(int i = 0; i < bulletinEntries.size(); i++){
+            HashMap<String, String> bulletinInfo = bulletinEntries.get(i);
+            bulletinPanelLayout.row().grid().add(new BulletinEntry(bulletinInfo, i));
+        }
+        
+        
+        
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         filterPanel.setOpaque(false);
         filterPanel.add(manilaCheckBox);
         filterPanel.add(makatiCheckBox);
         filterPanel.add(malolosCheckBox);
-        filterPanel.add(reloadButton);
         
         JPanel bulletinContainer = new JPanel(new BorderLayout(5, 5));
         bulletinContainer.setOpaque(false);
@@ -131,15 +137,42 @@ public class LeftPanel extends JPanel{
         JPanel bottomPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         bottomPanel.setOpaque(true);
         bottomPanel.setBackground(FrameWorkUtils.getPrimaryColor());
-        MenuButton profileButton = new MenuButton("Profile", 13f, new  ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/profile.png")), FrameWorkUtils.getPrimaryColor()),
-                   serviceRecordButton = new MenuButton("Classes", 13f, new  ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/record.png")), FrameWorkUtils.getPrimaryColor()),
-                   filesButton = new MenuButton("Files", 13f, new  ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/files.png")), FrameWorkUtils.getPrimaryColor()),
-                   settingsButton = new MenuButton("Settings", 13f, new  ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/settings.png")), FrameWorkUtils.getPrimaryColor());
+        MenuButton profileButton = new MenuButton("Profile", 13f, new  ImageIcon("images/profile.png"), FrameWorkUtils.getPrimaryColor()),
+                   serviceRecordButton = new MenuButton("Classes", 13f, new  ImageIcon("images/record.png"), FrameWorkUtils.getPrimaryColor()),
+                   filesButton = new MenuButton("Files", 13f, new  ImageIcon("images/files.png"), FrameWorkUtils.getPrimaryColor()),
+                   directoryButton = new MenuButton("Directory", 13f, new  ImageIcon("images/directory.png"), FrameWorkUtils.getPrimaryColor());
         
+        profileButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                FacultyMode.rightPanel.switchToProfile();
+            }
+        });
+        
+        filesButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                FacultyMode.rightPanel.switchToFiles();
+            }
+        });
+        
+        serviceRecordButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                FacultyMode.rightPanel.switchToClasses();
+            }
+        });
+        
+        directoryButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                FacultyMode.rightPanel.switchToDirectory();
+            }
+        });
         bottomPanel.add(profileButton);
         bottomPanel.add(serviceRecordButton);
         bottomPanel.add(filesButton);
-        bottomPanel.add(settingsButton);
+        bottomPanel.add(directoryButton);
         return bottomPanel;
     }
     
@@ -154,8 +187,8 @@ public class LeftPanel extends JPanel{
                 bulletinPanel.removeAll();
                 bulletinPanelLayout = new DesignGridLayout(bulletinPanel);
                 for(int i = 0; i < bulletinEntries.size(); i++){
-                    ArrayList<String> bulletinInfo = bulletinEntries.get(i);
-                    bulletinPanelLayout.row().grid().add(new BulletinEntry(bulletinInfo.get(0), bulletinInfo.get(1), bulletinInfo.get(2), bulletinInfo.get(3), bulletinInfo.get(4), bulletinInfo.get(5), i));
+                    HashMap<String, String> bulletinInfo = bulletinEntries.get(i);
+                    bulletinPanelLayout.row().grid().add(new BulletinEntry(bulletinInfo, i));
                 }
                 
                 bulletinPanel.revalidate();

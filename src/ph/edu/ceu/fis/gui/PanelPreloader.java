@@ -14,10 +14,8 @@
  **/
 package ph.edu.ceu.fis.gui; 
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
-import java.awt.event.*;
+import javax.swing.*;
 import ph.edu.ceu.fis.framework.FormLabel;
 import ph.edu.ceu.fis.framework.FrameWorkUtils;
 
@@ -30,7 +28,7 @@ public class PanelPreloader extends JPanel{
         
         JPanel loaderContaier = new JPanel(new BorderLayout(5, 5));
         loaderContaier.setOpaque(false);
-        loaderContaier.add(new JLabel(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/panel_preloader.gif"))), BorderLayout.CENTER);
+        loaderContaier.add(new JLabel(new ImageIcon("images/panel_preloader.gif")), BorderLayout.CENTER);
         loaderContaier.add(new FormLabel(loadingText, FrameWorkUtils.getSecondaryColor(), 15f), BorderLayout.SOUTH);
         add(loaderContaier);
     }

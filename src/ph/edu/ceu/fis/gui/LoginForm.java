@@ -14,11 +14,10 @@
  **/
 package ph.edu.ceu.fis.gui;
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.concurrent.TimeUnit;
+import javax.swing.*;
+import javax.swing.border.*;
 import net.java.dev.designgridlayout.DesignGridLayout;
 import ph.edu.ceu.fis.data.DataUtils;
 import ph.edu.ceu.fis.data.Flags;
@@ -76,8 +75,8 @@ public class LoginForm extends JFrame{
         // Setting layout of window(GridLayout).
         setLayout(new GridLayout(1, 1, 0, 0));
         // Setting window icon.
-        //setIconImage(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/link.eps")).getImage());
-        setIconImages(new FrameWorkUtils().getIcons());
+        //setIconImage(new ImageIcon("images/link.eps")).getImage());
+        setIconImages(new FrameWorkUtils().getAppIcons());
         mainContainer.setOpaque(true); // Setting mainContainer as opaque.
         mainContainer.setBackground(FrameWorkUtils.getSecondaryColor());// Setting background color of mainContainer.
         mainContainer.add(windowContainer(), "Main");// Adding login page and referenced as "Main".
@@ -101,7 +100,7 @@ public class LoginForm extends JFrame{
     private JLabel windowContainer(){
         
         // Declaring and initializing container with background.
-        JLabel windowContainer = new JLabel(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/login_background.png")));
+        JLabel windowContainer = new JLabel(new ImageIcon("images/login_background.png"));
         // Setting layout of windowContainer to BorderLayout.
         windowContainer.setLayout(new BorderLayout()); 
         // Removing insets.
@@ -171,7 +170,7 @@ public class LoginForm extends JFrame{
    
     
     private JPanel preLoader(){
-        JLabel preLoader = new JLabel(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/loading.gif")));
+        JLabel preLoader = new JLabel(new ImageIcon("images/loading.gif"));
         preLoader.setBorder(new EmptyBorder(0, 150, 0, 150));
         indicatorLabel = new FormLabel("Loading", FrameWorkUtils.getPrimaryColor(), 25f);
         JPanel container = new JPanel(new BorderLayout());
@@ -204,7 +203,7 @@ public class LoginForm extends JFrame{
                         indicatorLabel.setText("Successfully connected to file server...");
                         ClientUtils.wait(1);
                         indicatorLabel.setText("Logging in...");
-                        if(Session.loginAuthentication(userID, userPassword)){
+                        if(systemSession.loginAuthentication(userID, userPassword)){
                             ClientUtils.wait(1);
                             indicatorLabel.setText("Credentials authenticated...");
                             java.io.File f = new java.io.File("tmp//" + ClientUtils.sha512Hash(userID, "fis"));

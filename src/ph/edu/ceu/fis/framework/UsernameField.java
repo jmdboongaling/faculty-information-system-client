@@ -14,15 +14,17 @@
  **/
 package ph.edu.ceu.fis.framework;
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.text.*;
 
 
 public class UsernameField extends JPanel{
     
-    private JTextField textField = new JTextField();
+    private JFormattedTextField textField = new JFormattedTextField();
     private JLabel iconLabel = new JLabel();
     
     public UsernameField(String textFieldText){
@@ -30,14 +32,20 @@ public class UsernameField extends JPanel{
         setOpaque(false);
         setBorder(new MatteBorder(0, 0, 1, 0, FrameWorkUtils.getSecondaryColor()));
         iconLabel.setOpaque(false);
-        iconLabel.setIcon(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/username_icon.png")));
+        iconLabel.setIcon(new ImageIcon("images/username_icon.png"));
         iconLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        textField.setColumns(20);
         textField.setText(textFieldText);
         textField.setOpaque(false);
         textField.setForeground(FrameWorkUtils.getSecondaryColor());
         textField.setFont(FrameWorkUtils.getSystemFont().deriveFont(16f));
         textField.setBorder(null);
-        
+        try {
+            MaskFormatter dateMask = new MaskFormatter("##-#####");
+            dateMask.install(textField);
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
         textField.addFocusListener(new FocusListener(){
 
             @Override
@@ -48,7 +56,7 @@ public class UsernameField extends JPanel{
                 if(textField.getText().equals(textFieldText)){
                     textField.setText("");
                 }
-                iconLabel.setIcon(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/username_icon_focus.png")));
+                iconLabel.setIcon(new ImageIcon("images/username_icon_focus.png"));
             }
 
             @Override
@@ -59,7 +67,7 @@ public class UsernameField extends JPanel{
                 if(textField.getText().equals("")){
                     textField.setText(textFieldText);
                 }
-                iconLabel.setIcon(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/username_icon.png")));
+                iconLabel.setIcon(new ImageIcon("images/username_icon.png"));
             }
         });
         

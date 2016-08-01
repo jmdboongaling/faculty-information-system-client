@@ -14,10 +14,11 @@
  **/
 package ph.edu.ceu.fis.gui; 
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import ph.edu.ceu.fis.data.Session;
 import ph.edu.ceu.fis.framework.*;
 
 public class LogoutPopup extends JFrame{
@@ -26,9 +27,11 @@ public class LogoutPopup extends JFrame{
     JFrame systemFrame;
     
     Container originalContentPane;
-    public LogoutPopup(JFrame parentFrame/*Session systemSession*/){
+    Session systemSession;
+    public LogoutPopup(JFrame parentFrame, Session systemSession){
         this.systemFrame = parentFrame;
         this.originalContentPane = parentFrame.getContentPane();
+        this.systemSession = systemSession;
          JLayer<Component> blurLayer = new JLayer<>(parentFrame.getContentPane(), new BlurLayerUI());
         parentFrame.setContentPane(blurLayer);  
         parentFrame.revalidate();
@@ -36,8 +39,8 @@ public class LogoutPopup extends JFrame{
         parentFrame.setEnabled(false);
         //this.systemSession = systemSession;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_HORIZ);
-        setSize(new Dimension(getWidth(), 300));
+        //setExtendedState(JFrame.MAXIMIZED_HORIZ);
+        setSize(new Dimension(1000, 300));
         getContentPane().setBackground(FrameWorkUtils.getPrimaryColor());
         setLayout(new FlowLayout(FlowLayout.CENTER));
         add(mainContainer());
@@ -54,7 +57,7 @@ public class LogoutPopup extends JFrame{
         JPanel mainContainer = new JPanel(new BorderLayout(5, 5));
         mainContainer.setOpaque(false);
         mainContainer.setBorder(new EmptyBorder(30, 0, 50, 0));
-        mainContainer.add(new JLabel(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/logout.png"))), BorderLayout.WEST);
+        mainContainer.add(new JLabel(new ImageIcon("images/logout.png")), BorderLayout.WEST);
         mainContainer.add(messageContainer(), BorderLayout.CENTER);
         mainContainer.add(buttonPanel(), BorderLayout.SOUTH);
         
@@ -78,10 +81,10 @@ public class LogoutPopup extends JFrame{
         yesButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
+                systemSession.endSession();
                 systemFrame.dispose();
                 dispose();
-                String[] args = null;
-                Main.main(args);
+                
             }
         });
         

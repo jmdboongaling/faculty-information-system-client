@@ -14,38 +14,30 @@
  **/
 package ph.edu.ceu.fis.framework; 
 
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
         
 public class WrapField extends JTextArea{
-    public WrapField(String labelText, Color textColor, float fontSize){
+    public WrapField(String labelText, Color textColor, float fontSize, boolean editable){
         super(labelText.trim());
         setFont(FrameWorkUtils.getSystemFont().deriveFont(fontSize));
         setForeground(textColor);
-        //setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        setEditable(false);
-        setOpaque(false);
-        setEnabled(false);
+        setBackground(FrameWorkUtils.getPrimaryColor().brighter().brighter());
+       
+            
+        setEditable(editable);
+        setOpaque(editable);
+        setEnabled(editable);
+        
+        
         setLineWrap(true);
         setWrapStyleWord(true);
         
+        
     }
     
-    @Override
-    public void setEnabled(boolean isEnabled){
-        if(isEnabled){
-            super.setEnabled(true);
-            setEditable(true);
-            setOpaque(true);
-            setBackground(FrameWorkUtils.getPrimaryColor().brighter());
-        }else{
-            super.setEnabled(false);
-            setEditable(false);
-            setOpaque(false);
-            setBackground(null);
-        }
-    }
+    
     
     
 }

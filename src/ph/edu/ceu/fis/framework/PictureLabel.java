@@ -14,8 +14,6 @@
  **/
 package ph.edu.ceu.fis.framework; 
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.*;
@@ -23,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import javax.swing.*;
+import javax.swing.border.*;
 import net.coobird.thumbnailator.*;
 
 public class PictureLabel extends JLabel{
@@ -97,6 +97,78 @@ public class PictureLabel extends JLabel{
         setBorder(new EmptyBorder(20, 0, 20, 0));
     }
     
+    
+    public void setIcon(URL image, int width, int height, boolean roundedCorners){
+        try{
+            if(roundedCorners){
+                setIcon(new ImageIcon(makeRoundedCorner(Thumbnails.of(image).size(width, height).asBufferedImage(), 15)));
+            }else{
+                setIcon(new ImageIcon(Thumbnails.of(image).size(width, height).asBufferedImage()));
+            }
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+        setHorizontalAlignment(SwingConstants.CENTER);
+        setBorder(new EmptyBorder(20, 0, 20, 0));
+    }
+    
+    public void setIcon(File image, int width, int height, boolean roundedCorners){
+        try{
+            if(roundedCorners){
+                setIcon(new ImageIcon(makeRoundedCorner(Thumbnails.of(image).size(width, height).asBufferedImage(), 15)));
+            }else{
+                setIcon(new ImageIcon(Thumbnails.of(image).size(width, height).asBufferedImage()));
+            }
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+        setHorizontalAlignment(SwingConstants.CENTER);
+        setBorder(new EmptyBorder(20, 0, 20, 0));
+    }
+    
+    public void setIcon(String image, int width, int height, boolean roundedCorners){
+        try{
+            if(roundedCorners){
+                setIcon(new ImageIcon(makeRoundedCorner(Thumbnails.of(image).size(width, height).asBufferedImage(), 15)));
+            }else{
+                setIcon(new ImageIcon(Thumbnails.of(image).size(width, height).asBufferedImage()));
+            }
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+        setHorizontalAlignment(SwingConstants.CENTER);
+        setBorder(new EmptyBorder(20, 0, 20, 0));
+    }
+    
+    public void setIcon(InputStream image, int width, int height, boolean roundedCorners){
+        try{
+            if(roundedCorners){
+                setIcon(new ImageIcon(makeRoundedCorner(Thumbnails.of(image).size(width, height).asBufferedImage(), 15)));
+            }else{
+                setIcon(new ImageIcon(Thumbnails.of(image).size(width, height).asBufferedImage()));
+            }
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+        setHorizontalAlignment(SwingConstants.CENTER);
+        setBorder(new EmptyBorder(20, 0, 20, 0));
+    }
+    
+    public void setIcon(BufferedImage image, int width, int height, boolean roundedCorners){
+        try{
+            if(roundedCorners){
+                setIcon(new ImageIcon(makeRoundedCorner(Thumbnails.of(image).size(width, height).asBufferedImage(), 15)));
+            }else{
+                setIcon(new ImageIcon(Thumbnails.of(image).size(width, height).asBufferedImage()));
+            }
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+        setHorizontalAlignment(SwingConstants.CENTER);
+        setBorder(new EmptyBorder(20, 0, 20, 0));
+    }
+    
+    
     public static BufferedImage makeRoundedCorner(BufferedImage image, int cornerRadius){
     int w = image.getWidth();
     int h = image.getHeight();
@@ -105,7 +177,7 @@ public class PictureLabel extends JLabel{
     Graphics2D g2 = output.createGraphics();
     g2.setComposite(AlphaComposite.Src);
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    g2.setColor(FrameWorkUtils.getSecondaryColor());
+    g2.setColor(FrameWorkUtils.getPrimaryColor());
     g2.fill(new RoundRectangle2D.Float(0, 0, w, h, cornerRadius, cornerRadius));
 
     g2.setComposite(AlphaComposite.SrcAtop);

@@ -14,15 +14,15 @@
  **/
 package ph.edu.ceu.fis.gui; 
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
 import ph.edu.ceu.fis.data.DataUtils;
 import ph.edu.ceu.fis.data.Session;
-import ph.edu.ceu.fis.gui.faculty.CenterPanel;
-import ph.edu.ceu.fis.gui.faculty.LeftPanel;
-import ph.edu.ceu.fis.gui.faculty.RightPanel;
+import ph.edu.ceu.fis.framework.FormLabel;
+import ph.edu.ceu.fis.framework.FrameWorkUtils;
+import ph.edu.ceu.fis.gui.faculty.FacultyMode;
 
 public class SystemFrame extends JFrame{
     
@@ -33,6 +33,10 @@ public class SystemFrame extends JFrame{
     private GridBagConstraints gridBagConstraints = new GridBagConstraints();
     private Session systemSession;
     
+    private JPanel mainContainer = new JPanel(new BorderLayout());
+    
+    private static CardLayout modeSwitcher = new CardLayout();
+    
     public SystemFrame(Session systemSession){
         this.systemSession = systemSession;
         initComponents();
@@ -40,41 +44,23 @@ public class SystemFrame extends JFrame{
     
     private void initComponents(){
         
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setTitle(DataUtils.getAppTitle());
+        setIconImages(new FrameWorkUtils().getAppIcons());
         setExtendedState(getExtendedState() | Frame.MAXIMIZED_BOTH);
         getContentPane().setBackground(Color.WHITE);
-        /*setLayout(gridBagLayout);
-        
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = .20;
-        gridBagConstraints.weighty = 1;
-        gridBagConstraints.insets=new Insets(10, 10, 10, 5);
-        
-        add(leftContainer(), gridBagConstraints);
-        
-        gridBagConstraints.gridx++;
-        gridBagConstraints.weightx = .30;
-        gridBagConstraints.insets=new Insets(10, 5, 10, 5);
-        
-        add(centerContainer(), gridBagConstraints);
-        
-        gridBagConstraints.gridx++;
-        gridBagConstraints.weightx = .50;
-        gridBagConstraints.insets=new Insets(10, 5, 10, 5);
-        
-        add(rightContainer(), gridBagConstraints);*/
-        JPanel mainContainer = new JPanel(new GridLayout(1, 3, 10, 10));
-        mainContainer.setOpaque(false);
-        mainContainer.setBorder(new EmptyBorder(10, 10, 10, 10));
         setLayout(new GridLayout(1, 1));
-        mainContainer.add(leftContainer());
-        mainContainer.add(centerContainer());
-        mainContainer.add(rightContainer());
+        
+        
+        mainContainer.setOpaque(false);
+        mainContainer.setLayout(new BorderLayout(10, 10));
+        mainContainer.setBorder(new EmptyBorder(10, 10, 10, 10));
+        
+        
+        mainContainer.add(titlePanel(), BorderLayout.NORTH);
+        mainContainer.add(panelContainer(), BorderLayout.CENTER);
         add(mainContainer);
-        /*
+        
         addWindowListener(new WindowListener(){
            @Override
             public void windowClosing(WindowEvent e){
@@ -109,42 +95,35 @@ public class SystemFrame extends JFrame{
             public void windowIconified(WindowEvent e){
                 // Do nothing.
             }
-        })*/
-        setResizable(false);
+        });
+        //setResizable(false);
         setLocationRelativeTo(null);
-        //setVisible(true);
         
     }
     
-    private JPanel leftContainer(){
-        JPanel leftContainer = new JPanel(new GridLayout(1, 1));
-        JButton test = new JButton("Left");
-        
-        leftContainer.add(test);
-        
-        return new LeftPanel(systemSession);
+    private JPanel titlePanel(){
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        titlePanel.setOpaque(true);
+        titlePanel.setBackground(FrameWorkUtils.getPrimaryColor());
+        titlePanel.add(new JLabel(new ImageIcon("images/icon64.png")));
+        titlePanel.add(new FormLabel("Faculty Information System", FrameWorkUtils.getSecondaryColor(), 25f, SwingConstants.LEFT, 0));
+        return titlePanel;
     }
     
-    private JPanel centerContainer(){
-        JPanel centerContainer = new JPanel(new GridLayout(1, 1));
-        JButton test = new JButton("Center");
+    private JPanel panelContainer(){
+        JPanel panelContainer = new JPanel(modeSwitcher);
+        panelContainer.setOpaque(false);
         
-        centerContainer.add(test);
-        
-        return new CenterPanel(systemSession);
+        FacultyMode facultyMode = new FacultyMode(systemSession);
+        panelContainer.add(facultyMode, "Faculty");
+
+        return panelContainer;
     }
     
-    private JPanel rightContainer(){
-        JPanel rightContainer = new JPanel(new GridLayout(1, 1));
-        JButton test = new JButton("Right");
-        
-        rightContainer.add(test);
-        
-        return new RightPanel(systemSession);
-    }
     
-    private void doLogout(){
-        new LogoutPopup(this);
+    private void doLogout(){  
+        new LogoutPopup(this, systemSession);
     }
+  
     
 }

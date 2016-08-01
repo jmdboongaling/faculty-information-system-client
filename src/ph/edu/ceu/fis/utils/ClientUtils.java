@@ -66,7 +66,7 @@ public class ClientUtils{
         }catch(Exception e){
             e.printStackTrace();
         }
-        return sb.toString().substring(0, 32);
+        return sb.toString();
     }
      
     
@@ -85,5 +85,13 @@ public class ClientUtils{
     public static void wait(int seconds){
         try{TimeUnit.SECONDS.sleep(seconds);}catch(InterruptedException ie){ie.printStackTrace();}
     }
-
+    
+    public static String getFileSize(long size) {
+        if(size <= 0) return "0";
+        final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+        return new java.text.DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + units[digitGroups];
+    }
+    
+  
 }

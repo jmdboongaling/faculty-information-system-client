@@ -14,10 +14,10 @@
  **/
 package ph.edu.ceu.fis.framework;
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
 
 
 public class PasswordField extends JPanel{
@@ -30,7 +30,7 @@ public class PasswordField extends JPanel{
         setOpaque(false);
         setBorder(new MatteBorder(0, 0, 1, 0, FrameWorkUtils.getSecondaryColor()));
         iconLabel.setOpaque(false);
-        iconLabel.setIcon(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/password_icon.png")));
+        iconLabel.setIcon(new ImageIcon("images/password_icon.png"));
         iconLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
         textField.setText(textFieldText);
         textField.setOpaque(false);
@@ -52,7 +52,7 @@ public class PasswordField extends JPanel{
                 if(textField.getText().equals(textFieldText)){
                     textField.setText("");
                 }
-                iconLabel.setIcon(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/password_icon_focus.png")));
+                iconLabel.setIcon(new ImageIcon("images/password_icon_focus.png"));
             }
 
             @Override
@@ -64,7 +64,7 @@ public class PasswordField extends JPanel{
                     textField.setText(textFieldText);
                     textField.setEchoChar((char) 0);
                 }
-                iconLabel.setIcon(new ImageIcon(getClass().getResource("/ph/edu/ceu/fis/res/images/password_icon.png")));
+                iconLabel.setIcon(new ImageIcon("images/password_icon.png"));
             }
         });
         

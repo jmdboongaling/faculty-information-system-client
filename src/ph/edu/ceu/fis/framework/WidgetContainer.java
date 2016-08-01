@@ -14,11 +14,9 @@
  **/
 package ph.edu.ceu.fis.framework; 
 
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import java.awt.*;
-import java.util.ArrayList;
-import org.jdesktop.swingx.border.DropShadowBorder;
 
 public class WidgetContainer extends JPanel{
     public static int HORIZONTAL = 0,

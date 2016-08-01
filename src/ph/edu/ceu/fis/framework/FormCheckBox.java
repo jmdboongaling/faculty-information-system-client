@@ -15,7 +15,6 @@
 package ph.edu.ceu.fis.framework; 
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 
 
@@ -27,11 +26,11 @@ public class FormCheckBox extends JPanel{
         super(new BorderLayout(5, 5));
         setOpaque(false);
         checkBox.setBorderPainted(false);
-        checkBox.setIcon(new ImageIcon("uncheck.png"));
-        checkBox.setSelectedIcon(new ImageIcon("check.png"));
-        checkBox.setDisabledIcon(new ImageIcon("uncheck.png"));
-        checkBox.setDisabledSelectedIcon(new ImageIcon("uncheck.png"));
-        checkBox.setPressedIcon(new ImageIcon("check.png"));
+        checkBox.setIcon(new ImageIcon("images/uncheck.png"));
+        checkBox.setSelectedIcon(new ImageIcon("images/check.png"));
+        checkBox.setDisabledIcon(new ImageIcon("images/uncheck.png"));
+        checkBox.setDisabledSelectedIcon(new ImageIcon("images/uncheck.png"));
+        checkBox.setPressedIcon(new ImageIcon("images/check.png"));
         checkBox.setSelected(true);
         checkBox.setContentAreaFilled(false);
                 

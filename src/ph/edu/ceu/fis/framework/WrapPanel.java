@@ -15,9 +15,7 @@
 package ph.edu.ceu.fis.framework; 
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
 
 public class WrapPanel extends JPanel{
     public WrapPanel(Component... components){
