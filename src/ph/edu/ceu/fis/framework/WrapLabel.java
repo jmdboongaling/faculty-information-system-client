@@ -18,26 +18,23 @@ import java.awt.*;
 import javax.swing.*;
 
         
-public class WrapField extends JTextArea{
-    public WrapField(String labelText, Color textColor, float fontSize, boolean editable){
+public class WrapLabel extends JTextArea{
+    public WrapLabel(String labelText, Color textColor, float fontSize){
         super(labelText.trim());
         setFont(FrameWorkUtils.getSystemFont().deriveFont(fontSize));
         setForeground(textColor);
-        setBackground(FrameWorkUtils.getPrimaryColor().brighter().brighter());
        
             
-        setEditable(editable);
-        setOpaque(editable);
-        setEnabled(editable);
-        
+        setEditable(false);
+        setOpaque(false);
+        setEnabled(false);
+        setDisabledTextColor(textColor);
         
         setLineWrap(true);
         setWrapStyleWord(true);
         
         
     }
-    
-    
     
     
     

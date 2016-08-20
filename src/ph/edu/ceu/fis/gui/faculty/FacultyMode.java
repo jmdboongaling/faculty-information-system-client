@@ -34,7 +34,6 @@ public class FacultyMode extends JPanel{
     private void initComponents(){
         setLayout(new GridLayout(1, 3, 10, 10));
         setOpaque(false);
-        setOpaque(false);
         
         LeftPanel leftPanel = new LeftPanel(systemSession);
         CenterPanel centerPanel = new CenterPanel(systemSession);

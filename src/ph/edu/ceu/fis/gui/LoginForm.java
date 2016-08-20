@@ -31,6 +31,8 @@ public class LoginForm extends JFrame{
     // Declaration of Session object which holds all information of current user.
     public Session systemSession;
     
+    public static SystemFrame systemFrame;
+    
     // Flags constructor tests connection to Web Server and FTP Server.
     private Flags systemStartupFlags = new Flags(); 
     
@@ -211,7 +213,7 @@ public class LoginForm extends JFrame{
                             ClientUtils.wait(1);
                             indicatorLabel.setText("Loading system...");
                             ClientUtils.wait(1);
-                            SystemFrame systemFrame = new SystemFrame(systemSession);
+                            systemFrame = new SystemFrame(systemSession);
                             panelSwitcher.show(mainContainer, "Main");
                             dispose();
                             systemFrame.setVisible(true);

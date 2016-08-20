@@ -123,7 +123,40 @@ public class FormButton extends JButton{
             }
         });
     }
-    
+    public FormButton(String buttonText, Color backgroundColor, Color textColor, float textSize){
+        super(buttonText);
+        setFocusPainted(false);
+        setFont(FrameWorkUtils.getSystemFont().deriveFont(textSize));
+        setForeground(textColor);
+        setBorder(new MatteBorder(0, 0, 1, 0, textColor));
+        setBackground(backgroundColor);
+        addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                setBackground(backgroundColor.brighter());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e){
+                setBackground(backgroundColor.brighter());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e){
+                setBackground(backgroundColor);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e){
+                setBackground(backgroundColor.brighter());
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e){
+                setBackground(backgroundColor);
+            }
+        });
+    }
     public FormButton(String buttonText, Color textColor, Color focusColor, float textSize, int height){
         super("      " + buttonText);
         setFocusPainted(false);

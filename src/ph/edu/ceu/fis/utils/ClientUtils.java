@@ -15,8 +15,11 @@
 package ph.edu.ceu.fis.utils; 
 
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.StringUtils;
 
 public class ClientUtils{
     
@@ -93,5 +96,39 @@ public class ClientUtils{
         return new java.text.DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + units[digitGroups];
     }
     
-  
+    public static Object[] generateYears(){
+        ArrayList<Object> yearsList = new ArrayList<Object>();
+        yearsList.add("");
+        yearsList.add(Integer.toString(Calendar.getInstance().get(Calendar.YEAR) + 1));
+        for(int i = Calendar.getInstance().get(Calendar.YEAR); i >= 1950; i--){
+            yearsList.add(Integer.toString(i));
+        }
+        
+        
+        return yearsList.toArray();
+    }
+    
+    public static boolean informationVerify(String[] informationFlags){
+        boolean informationPassed = true;
+        for(int i = 0; i < informationFlags.length; i++){
+            if(informationFlags[i].trim().equals("") || informationFlags[i].equals(null) || informationFlags[i].isEmpty()){
+                return false;
+            }
+        }
+        return informationPassed;
+    }
+    
+    public static boolean numericVerify(String[] informationFlags){
+        boolean informationPassed = true;
+        for(int i = 0; i < informationFlags.length; i++){
+            if(!StringUtils.isBlank(informationFlags[i])){
+                try{
+                    Double.parseDouble(informationFlags[i]);
+                }catch(NumberFormatException e){
+                    return false;
+                }
+            }
+        }
+        return informationPassed;
+    }
 }

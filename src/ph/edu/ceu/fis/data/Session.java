@@ -157,44 +157,7 @@ public class Session{
     }
     
     public void invokeProfileInformation(){
-        try{
-            
-            Client wsClient =  Client.create();
-            WebResource webResource = wsClient.resource("http://" + DataUtils.getWebServerHost()[0] + ":" + DataUtils.getWebServerHost()[1] + "/CEU_FIS_WS/user/profile");
-            ClientResponse wsResponse = webResource.queryParam("user_id", userID).accept("application/json").post(ClientResponse.class);
-            if(wsResponse.getStatus() == 200){
-                JSONObject serverResponse = new JSONObject(wsResponse.getEntity(String.class));
-                ClientUtils.log(new java.util.Date() + " -  Server Response...............[OK!]");
-                profileInformation.put("user_type", serverResponse.getString("user_type"));
-                profileInformation.put("last_name", serverResponse.getString("last_name"));
-                profileInformation.put("first_name", serverResponse.getString("first_name"));
-                profileInformation.put("middle_name", serverResponse.getString("middle_name"));
-                profileInformation.put("gender", serverResponse.getString("gender"));
-                profileInformation.put("email", serverResponse.getString("email"));
-                profileInformation.put("civil_status", serverResponse.getString("civil_status"));
-                profileInformation.put("birthday", serverResponse.getString("birthday"));
-                profileInformation.put("employee_status", serverResponse.getString("employee_status"));
-                profileInformation.put("employee_position", serverResponse.getString("employee_position"));
-                profileInformation.put("employee_department", serverResponse.getString("employee_department"));
-                profileInformation.put("birth_place", serverResponse.getString("birth_place"));
-                profileInformation.put("religion", serverResponse.getString("religion"));
-                profileInformation.put("citizenship", serverResponse.getString("citizenship"));
-                profileInformation.put("present_address", serverResponse.getString("present_address"));
-                profileInformation.put("present_contact", serverResponse.getString("present_contact"));
-                profileInformation.put("residence_address", serverResponse.getString("residence_address"));
-                profileInformation.put("residence_contact", serverResponse.getString("residence_contact"));
-                profileInformation.put("spouse_name", serverResponse.getString("spouse_name"));
-                profileInformation.put("emergency_name", serverResponse.getString("emergency_name"));
-                profileInformation.put("emergency_relationship", serverResponse.getString("emergency_relationship"));
-                profileInformation.put("emergency_contact", serverResponse.getString("emergency_contact"));
-                profileInformation.put("specialization_fields", serverResponse.getString("specialization_fields"));
-                
-            }else{
-                ClientUtils.log(new java.util.Date() + " -  Server Response: " + wsResponse.getStatus());
-            }
-        }catch(Exception e){
-            ClientUtils.log(new java.util.Date() + " -  Error Message: " + e.getMessage());
-        }
+        profileInformation = BasicInformation.getBasicInformation(userID);
     }
     
     public HashMap<String, String> getProfileInformation(){
@@ -278,30 +241,7 @@ public class Session{
     }
     
     private void invokeChildren(){
-        childEntries = new ArrayList<ArrayList<String>>();
-        try{
-            
-            Client wsClient =  Client.create();
-            WebResource webResource = wsClient.resource("http://" + DataUtils.getWebServerHost()[0] + ":" + DataUtils.getWebServerHost()[1] + "/CEU_FIS_WS/user/children");
-            ClientResponse wsResponse = webResource.queryParam("user_id", userID).accept("application/json").post(ClientResponse.class);
-            if(wsResponse.getStatus() == 200){
-                JSONArray serverResponse = new JSONArray(wsResponse.getEntity(String.class));
-                System.out.println(serverResponse);
-                ClientUtils.log(new java.util.Date() + " -  Server Response...............[OK!]");
-                for(int i = 0; i < serverResponse.length(); i++){
-                    ArrayList<String> childInfo = new ArrayList<String>();
-                    childInfo.add(serverResponse.getJSONObject(i).getString("id"));
-                    childInfo.add(serverResponse.getJSONObject(i).getString("child_name"));
-                    childInfo.add(serverResponse.getJSONObject(i).getString("gender"));
-                    childInfo.add(serverResponse.getJSONObject(i).getString("birth_order"));
-                    childEntries.add(childInfo);
-                }
-            }else{
-                ClientUtils.log(new java.util.Date() + " -  Server Response: " + wsResponse.getStatus());
-            }
-        }catch(Exception e){
-            ClientUtils.log(new java.util.Date() + " -  Error Message: " + e.getMessage());
-        }
+        childEntries = Children.getChildren(userID);
     }
     
     public ArrayList<ArrayList<String>> getChildren(){
@@ -310,35 +250,7 @@ public class Session{
     }
     
     private void invokeEducation(){
-        educationEntries = new ArrayList<HashMap<String, String>>();
-        try{
-            
-            Client wsClient =  Client.create();
-            WebResource webResource = wsClient.resource("http://" + DataUtils.getWebServerHost()[0] + ":" + DataUtils.getWebServerHost()[1] + "/CEU_FIS_WS/user/education");
-            ClientResponse wsResponse = webResource.queryParam("user_id", userID).accept("application/json").post(ClientResponse.class);
-            if(wsResponse.getStatus() == 200){
-                JSONArray serverResponse = new JSONArray(wsResponse.getEntity(String.class));
-                System.out.println(serverResponse);
-                ClientUtils.log(new java.util.Date() + " -  Server Response...............[OK!]");
-                for(int i = 0; i < serverResponse.length(); i++){
-                    HashMap<String, String> educationInfo = new HashMap<String, String> ();
-                    educationInfo.put("id", serverResponse.getJSONObject(i).getString("id"));
-                    educationInfo.put("degree", serverResponse.getJSONObject(i).getString("degree"));
-                    educationInfo.put("institution", serverResponse.getJSONObject(i).getString("institution"));
-                    educationInfo.put("start_date", serverResponse.getJSONObject(i).getString("start_date"));
-                    educationInfo.put("honors", serverResponse.getJSONObject(i).getString("honors"));
-                    educationInfo.put("end_date", serverResponse.getJSONObject(i).getString("end_date"));
-                    educationInfo.put("units_earned", serverResponse.getJSONObject(i).getString("units_earned"));
-                    educationInfo.put("scholarship", serverResponse.getJSONObject(i).getString("scholarship"));
-                    educationInfo.put("state_units", serverResponse.getJSONObject(i).getString("state_units"));
-                    educationEntries.add(educationInfo);
-                }
-            }else{
-                ClientUtils.log(new java.util.Date() + " -  Server Response: " + wsResponse.getStatus());
-            }
-        }catch(Exception e){
-            ClientUtils.log(new java.util.Date() + " -  Error Message: " + e.getMessage());
-        }
+        educationEntries = Education.getEducation(userID);
     }
     
     public ArrayList<HashMap<String, String>> getEducation(){

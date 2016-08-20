@@ -22,6 +22,7 @@ import ph.edu.ceu.fis.data.DataUtils;
 import ph.edu.ceu.fis.data.Session;
 import ph.edu.ceu.fis.framework.FormLabel;
 import ph.edu.ceu.fis.framework.FrameWorkUtils;
+import ph.edu.ceu.fis.gui.faculty.EditMode;
 import ph.edu.ceu.fis.gui.faculty.FacultyMode;
 
 public class SystemFrame extends JFrame{
@@ -32,10 +33,11 @@ public class SystemFrame extends JFrame{
     
     private GridBagConstraints gridBagConstraints = new GridBagConstraints();
     private Session systemSession;
+    private CardLayout modeSwitcher = new CardLayout();
+    private JPanel mainContainer = new JPanel(new BorderLayout()),
+                   panelContainer = new JPanel(modeSwitcher);
     
-    private JPanel mainContainer = new JPanel(new BorderLayout());
     
-    private static CardLayout modeSwitcher = new CardLayout();
     
     public SystemFrame(Session systemSession){
         this.systemSession = systemSession;
@@ -64,7 +66,8 @@ public class SystemFrame extends JFrame{
         addWindowListener(new WindowListener(){
            @Override
             public void windowClosing(WindowEvent e){
-                doLogout();
+                //doLogout();
+                System.exit(0);
             }
             @Override
             public void windowDeiconified(WindowEvent e){
@@ -111,11 +114,14 @@ public class SystemFrame extends JFrame{
     }
     
     private JPanel panelContainer(){
-        JPanel panelContainer = new JPanel(modeSwitcher);
+        
         panelContainer.setOpaque(false);
         
         FacultyMode facultyMode = new FacultyMode(systemSession);
-        panelContainer.add(facultyMode, "Faculty");
+        EditMode editMode = new EditMode(systemSession);
+        //panelContainer.add(facultyMode, "Faculty");
+        panelContainer.add(editMode, "Edit");
+        
 
         return panelContainer;
     }
@@ -125,5 +131,11 @@ public class SystemFrame extends JFrame{
         new LogoutPopup(this, systemSession);
     }
   
+    public void switchToEditMode(){
+        modeSwitcher.show(panelContainer, "Edit");
+    }
     
+    public void switchToFacultyMode(){
+        modeSwitcher.show(panelContainer, "Faculty");
+    }
 }

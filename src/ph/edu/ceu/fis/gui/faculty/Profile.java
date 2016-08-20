@@ -23,6 +23,7 @@ import javax.swing.border.*;
 import net.java.dev.designgridlayout.*;
 import ph.edu.ceu.fis.data.Session;
 import ph.edu.ceu.fis.framework.*;
+import ph.edu.ceu.fis.gui.LoginForm;
 import ph.edu.ceu.fis.gui.PanelPreloader;
 import ph.edu.ceu.fis.utils.ClientUtils;
 
@@ -156,7 +157,7 @@ public class Profile extends JPanel{
         editButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                
+                LoginForm.systemFrame.switchToEditMode();
             }
         });
         navigatorPanel.add(basicButton);

@@ -25,6 +25,18 @@ public class WrapPanel extends JPanel{
             add(components[i]);
         }
     }
+    public WrapPanel(){
+        super(new WrapLayout(FlowLayout.LEFT, 5, 5));
+        setOpaque(false);
+        
+    }
+    
+    public void setComponents(Component... components){
+        for(int i = 0; i < components.length; i++){
+            add(components[i]);
+        }
+    }
+    
 
 
 }

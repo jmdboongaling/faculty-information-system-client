@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Mon Aug 01 20:25:43 PHT 2016:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0156-4611-2402-00000559c570 
-on database directory /home/jmdboongaling/Documents/DevProjects/CEU_FIS/Current/CEU_FIS/data with class loader sun.misc.Launcher$AppClassLoader@4d7e1886 
+Sat Aug 20 13:29:54 PHT 2016:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0156-a66d-450c-000005f8caa0 
+on database directory /home/jmdboongaling/Documents/DevProjects/CEU_FIS/Current/CEU_FIS/data with class loader sun.misc.Launcher$AppClassLoader@2f0e140b 
 Loaded from file:/home/jmdboongaling/Documents/DevProjects/CEU_FIS/Current/Libraries/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_91-8u91-b14-0ubuntu4~14.04-b14

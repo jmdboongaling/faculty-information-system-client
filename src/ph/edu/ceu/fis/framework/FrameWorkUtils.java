@@ -68,12 +68,5 @@ public class FrameWorkUtils{
         return iconsList;
     }
     
-    public static JPanel formRow(String rowLabel, Component rowComponent){
-        JPanel row = new JPanel(new BorderLayout(5, 5));
-        row.setOpaque(false);
-        row.add(new FormLabel(rowLabel, FrameWorkUtils.getSecondaryColor(), 13f), BorderLayout.WEST);
-        row.add(rowComponent, BorderLayout.CENTER);
-        
-        return row;
-    }
+    
 }
